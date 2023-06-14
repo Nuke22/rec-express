@@ -55,7 +55,7 @@ const User = mongoose.model('User', {
 
 const Category = mongoose.model('Category', {
     name: String,
-    rating: Float32Array
+    rate: Number
 }, 'Category');
 
 //TODO МiddleWare
@@ -110,7 +110,7 @@ app.get('/result', function (req, res, next) {
     res.render('User/result', {title: 'Результати'});
 });
 
-// TODO  Обробник форми реєстрації
+// PvsTODO  Обробник форми реєстрації
 // Роутер для обробки реєстрації
 app.post('/register-user', async (req, res) => {
     try {
