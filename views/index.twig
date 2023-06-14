@@ -10,8 +10,15 @@
             </div>
 
             <div class="col-md-3 text-end">
-                <a href="{{ path:('register') }}"><button type="button" class="btn btn-outline-primary me-2">Увійти</button></a>
-                <a href="{{ path:('register') }}"><button type="button" class="btn btn-primary">Зареєструватися</button></a>
+                {% if user %}
+                    <a class="btn btn-primary" href="/logout">Вийти</a>
+                {% else %}
+                    <a href="{{ path:('login') }}"><button type="button" class="btn btn-outline-primary me-2">Увійти</button></a>
+                    <a href="{{ path:('register') }}"><button type="button" class="btn btn-primary">Зареєструватися</button></a>
+                {% endif %}
+
+                {#                <a href="{{ path:('login') }}"><button type="button" class="btn btn-outline-primary me-2">Увійти</button></a>#}
+
             </div>
         </header>
     </div>

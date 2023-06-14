@@ -2,7 +2,7 @@
 {% block body %}
     <div class="container">
         <div class="form-container">
-            <h1>Реєстрація</h1>
+            <h1>Авторизація</h1>
 
             {% if message %}
                 <div class="alert alert-danger" role="alert">
@@ -10,17 +10,7 @@
                 </div>
             {% endif %}
 
-            <form action="/register-user" method="POST">
-                <div class="form-group">
-                    <label for="first_name">Ім'я:</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="second_name">Прізвище:</label>
-                    <input type="text" class="form-control" id="second_name" name="second_name" required>
-                </div>
-
+            <form action="/login-user" method="POST">
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" class="form-control" id="email" name="email" required>
@@ -31,7 +21,7 @@
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary reg_btn">Зареєструватися</button>
+                <button type="submit" class="btn btn-primary reg_btn">Авторизуватися</button>
             </form>
         </div>
     </div>
