@@ -1,8 +1,82 @@
 body {
-  padding: 50px;
+  background-color: #f8f9fa;
+  padding: 20px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-container button {
+  width: 100%;
+}
+.reg_btn{
+  margin-top: 20px;
+}
+
+.admin-panel {
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.admin-panel h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.admin-panel p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.admin-panel ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.admin-panel li {
+  margin-bottom: 10px;
+}
+
+.admin-panel li a {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.admin-panel li a.add {
+
+  background-color: green;
+}
+
+.admin-panel li a.add:hover {
+
+  background-color: #00cc00;
+}
+
+.admin-panel li a.delete {
+  background-color: red;
+}
+
+.admin-panel li a.delete:hover {
+  background-color: #ff1a1a;
 }

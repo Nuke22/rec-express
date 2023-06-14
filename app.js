@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const express = require('express');
+const router = express.Router();
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -26,12 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-
-
-// TODO Registration TRY
 // Підключення до бази даних MongoDB
-mongoose.connect('mongodb://localhost/myapp', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost:27017/express', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
       console.log('Connected to MongoDB');
     })
@@ -45,11 +42,12 @@ const User = mongoose.model('User', {
   second_name: String,
   email: String,
   password: String
-});
+},'Users');
 
 // Middleware для обробки JSON даних
 app.use(bodyParser.json());
 
+// TODO  Обробник форми реєстрації
 // Роутер для обробки реєстрації
 app.post('/create', async (req, res) => {
   try {
@@ -58,7 +56,7 @@ app.post('/create', async (req, res) => {
     // Перевірка, чи користувач з таким ім'ям вже існує
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ message: 'Користувач з таким ім\'ям вже існує' });
+      return res.status(409).send('<script>alert("Даний E-mail уже зареєстрований в системі"); window.history.back();</script>');
     }
 
     // Хешування пароля
@@ -67,19 +65,13 @@ app.post('/create', async (req, res) => {
     // Створення нового користувача
     const newUser = new User({ first_name,second_name,email, password: hashedPassword });
     await newUser.save();
+    return res.send('<script>alert("Реєстрація пройшла успішно"); window.location.href = "/";</script>');
 
-    res.status(201).json({ message: 'Реєстрація пройшла успішно' });
   } catch (error) {
     console.error('Error during registration:', error);
-    res.status(500).json({ message: 'Помилка під час реєстрації' });
+    return res.send('<script>alert("Виникла помилка під час реєстрації"); window.history.back();</script>');
   }
 });
-
-// // Запуск сервера
-// app.listen(3000, () => {
-//   console.log('Server started on port 3000');
-// });
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
