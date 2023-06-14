@@ -56,7 +56,7 @@ app.use(bodyParser.json());
 
 //TODO Сторінка Домашня
 app.get('/', function(req, res, next) {
-  res.render('index', { title: 'Домашня сторінка', user: req.session.user});
+  res.render('index', { title: 'Домашня сторінка', user: req.session.user,});
 });
 
 //TODO Сторінка Реєстрації
