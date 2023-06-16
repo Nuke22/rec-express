@@ -34,6 +34,7 @@ app.use(session({
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 //TODO БАЗА ДАННИХ
 //Підключення до бази даних MongoDB
 mongoose.connect('mongodb://localhost:27017/express', {useNewUrlParser: true, useUnifiedTopology: true})
@@ -50,11 +51,11 @@ const User = mongoose.model('User', {
     second_name: String,
     email: String,
     password: String,
-    role: {type: String, default: 'user'} // Значення за замовчуванням "user"
+    role: {type: String, default: 'user'}
 }, 'Users');
 
 const Category = mongoose.model('Category', {
-    name: String,
+    title: String,
     rate: Number
 }, 'Category');
 
@@ -81,8 +82,14 @@ const authenticateUser = (req, res, next) => {
 };
 
 // TODO Сторінка Адмін Панелі
-app.get('/admin-panel', authenticateUser, (req, res) => {
-    res.render('Admin/admin-panel', {title: 'Панель Адміністратора'});
+app.get('/admin-panel', authenticateUser, async (req, res) => {
+    try {
+        const categories = await Category.find();
+        res.render('Admin/admin-panel', {title: 'Панель Адміністратора', cat: categories});
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Помилка під час отримання категорій');
+    }
 });
 
 //TODO Сторінка Домашня

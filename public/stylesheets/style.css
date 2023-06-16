@@ -80,3 +80,6 @@ a {
 .admin-panel li a.delete:hover {
   background-color: #ff1a1a;
 }
+.admin-panel-right{
+  justify-content: end;
+}

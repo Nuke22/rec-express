@@ -1,10 +1,33 @@
 {% extends '../layout.twig' %}
 {% block body %}
-    <div class="admin-panel">
-        <h2>Вітаємо в панелі Адміністратора</h2>
-        <p>Тут ви можете змінювати ваше наповнення</p>
-        <ul>
-            <li><a href="/admin-panel/add" class="add">Додати</a></li>
-        </ul>
+    <div class="admin-panel" style="display: flex;">
+        <div class="admin-panel-left">
+            <h2>Вітаємо в панелі Адміністратора</h2>
+            <p>Тут ви можете змінювати ваше наповнення</p>
+            <ul>
+                <li><a href="/admin-panel/add" class="add">Додати</a></li>
+            </ul>
+        </div>
+        <div class="admin-panel-right" style="margin-left: auto;">
+            <div class="container">
+                <h2>Категорії</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Назва</th>
+                        <th>Рейтинг</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for category in cat %}
+                        <tr>
+                            <td>{{ category.title }}</td>
+                            <td>{{ category.rate }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
