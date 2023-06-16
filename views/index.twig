@@ -12,7 +12,7 @@
             <div class="col-md-3 text-end">
                 {% if user %}
                     {% if user.role == "admin" %}
-                        <a href="{{ path:('admin-panel') }}"><button type="button" class="btn btn-outline-primary me-2 ">Панель Адміністратора</button></a>
+                        <a href="{{ path:('admin/panel') }}"><button type="button" class="btn btn-outline-primary me-2 ">Панель Адміністратора</button></a>
                         <a href="{{ path:('logout') }}"><button type="button" class="btn btn-outline-primary me-2 ">Вийти</button></a>
                     {% else %}
                             <a class="btn btn-primary" href="/logout">Вийти</a>

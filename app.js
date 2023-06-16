@@ -82,7 +82,7 @@ const authenticateUser = (req, res, next) => {
 };
 
 // TODO Сторінка Адмін Панелі
-app.get('/admin-panel', authenticateUser, async (req, res) => {
+app.get('/admin/panel', authenticateUser, async (req, res) => {
     try {
         const categories = await Category.find();
         res.render('Admin/admin-panel', {title: 'Панель Адміністратора', cat: categories});
@@ -116,10 +116,14 @@ app.get('/search', function (req, res, next) {
 app.get('/result', function (req, res, next) {
     res.render('User/result', {title: 'Результати'});
 });
+// TODO Сторінка Додавання категорій
+app.get('/admin/panel/add', authenticateUser, (req, res) => {
+    res.render('Admin/add-category', { title: 'Додати категорію' });
+});
 
-// PvsTODO  Обробник форми реєстрації
+// TODO  Обробник форми реєстрації
 // Роутер для обробки реєстрації
-app.post('/register-user', async (req, res) => {
+app.post('/register/user', async (req, res) => {
     try {
         const {first_name, second_name, email, password} = req.body;
 
@@ -145,7 +149,7 @@ app.post('/register-user', async (req, res) => {
 
 // TODO Обробник форми авторизації
 // Роутер для обробки авторизації
-app.post('/login-user', async (req, res) => {
+app.post('/login/user', async (req, res) => {
     try {
         const {email, password} = req.body;
 
@@ -186,7 +190,28 @@ app.get('/logout', (req, res) => {
     });
 });
 
-//TODO Обробник Додавання категорій(чи шо там, не зовсім поняв)
+// TODO Обробник форми Додавання категорій
+app.post('/add', async (req, res) => {
+    try {
+        const {title,rate} = req.body;
+
+        // Перевірка, чи категорія з таким ім'ям вже існує
+        const existingCategory = await User.findOne({title});
+        if (existingCategory) {
+            return res.status(409).send('<script>alert("Дана Категорія уже зареєстрована в системі"); window.history.back();</script>');
+        }
+
+        // Створення нової категорії
+        const newCategory = new Category({title,rate});
+        await newCategory.save();
+        return res.send('<script>alert("Додавання пройшло успішно"); window.location.href = "/admin/panel";</script>');
+
+    } catch (error) {
+        console.error('Error during adding:', error);
+        return res.send('<script>alert("Виникла помилка під час додавання"); window.history.back();</script>');
+    }
+});
+
 
 
 // catch 404 and forward to error handler

@@ -1,11 +1,64 @@
 {% extends '../layout.twig' %}
 {% block body %}
+    <style>
+        .admin-panel {
+            display: flex;
+        }
+
+        .admin-panel-left {
+            width: 300px;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .admin-panel-right {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .change-btn,
+        .delete-btn {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .change-btn:hover,
+        .delete-btn:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
     <div class="admin-panel" style="display: flex;">
         <div class="admin-panel-left">
             <h2>Вітаємо в панелі Адміністратора</h2>
             <p>Тут ви можете змінювати ваше наповнення</p>
             <ul>
-                <li><a href="/admin-panel/add" class="add">Додати</a></li>
+                <li><a href="/admin/panel/add" class="add">Додати</a></li>
             </ul>
         </div>
         <div class="admin-panel-right" style="margin-left: auto;">
@@ -16,6 +69,8 @@
                     <tr>
                         <th>Назва</th>
                         <th>Рейтинг</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -23,6 +78,8 @@
                         <tr>
                             <td>{{ category.title }}</td>
                             <td>{{ category.rate }}</td>
+                            <td><button class="change-btn">Змінити</button></td>
+                            <td><button class="delete-btn">Видалити</button></td>
                         </tr>
                     {% endfor %}
                     </tbody>
