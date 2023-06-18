@@ -56,8 +56,18 @@ const User = mongoose.model('User', {
 
 const Category = mongoose.model('Category', {
     title: String,
-    rate: Number
-}, 'Category');
+    type: String,
+    params: [
+        {
+            index: String,
+            title: String,
+            rating: Number
+        }]
+    }, 'Category');
+
+const TypeOfResource = mongoose.model("TypeOfResource", {
+    name: String
+})
 
 //TODO МiddleWare
 //Middleware для обробки JSON даних
@@ -93,8 +103,10 @@ app.get('/admin/panel', authenticateUser, async (req, res) => {
 });
 
 //TODO Сторінка Домашня
-app.get('/', function (req, res, next) {
-    res.render('index', {title: 'Домашня сторінка', user: req.session.user,});
+app.get('/', async (req, res, next) => {
+    const categories = await TypeOfResource.find();
+    console.log(categories)
+    res.render('index', {title: 'Домашня сторінка', user: req.session.user, categories: categories});
 });
 
 //TODO Сторінка Реєстрації
@@ -105,11 +117,6 @@ app.get('/register', function (req, res, next) {
 //TODO Сторінка Авторизації
 app.get('/login', function (req, res, next) {
     res.render('Auth/login', {title: 'Реєстрація'});
-});
-
-//TODO Сторінка Пошуку
-app.get('/search', function (req, res, next) {
-    res.render('User/search', {title: 'Пошук'});
 });
 
 //TODO Сторінка Результатів
@@ -193,7 +200,7 @@ app.get('/logout', (req, res) => {
 // TODO Обробник форми Додавання категорій
 app.post('/add', async (req, res) => {
     try {
-        const {title,rate} = req.body;
+        const {title,type,rating1,rating2,rating3,rating4,rating5,rating6,rating7,rating8,rating9,rating10} = req.body;
 
         // Перевірка, чи категорія з таким ім'ям вже існує
         const existingCategory = await User.findOne({title});
@@ -202,7 +209,53 @@ app.post('/add', async (req, res) => {
         }
 
         // Створення нової категорії
-        const newCategory = new Category({title,rate});
+        const newCategory = new Category({
+            title,
+            type,
+            params: [
+                {
+                    title: 'Інтерактивність',
+                    rating: rating1
+                },
+                {
+                    title: 'Мультимедійність',
+                    rating: rating2
+                },
+                {
+                    title: 'Можливість модифікації',
+                    rating: rating3
+                },
+                {
+                    title: 'Кросплатформеність',
+                    rating: rating4
+                },
+                {
+                    title: 'Вільнопоширюваність',
+                    rating: rating5
+                },
+                {
+                    title: 'Архітектура',
+                    rating: rating6
+                },
+                {
+                    title: 'Функціональність',
+                    rating: rating7
+                },
+                {
+                    title: 'Чисельність тем для опрацювання',
+                    rating: rating8
+                },
+                {
+                    title: 'Відповідність предметній області',
+                    rating: rating9
+                },
+                {
+                    title: 'Відповідність навчального змісту освітнім стандартам',
+                    rating: rating10
+                },
+            ]
+
+        });
         await newCategory.save();
         return res.send('<script>alert("Додавання пройшло успішно"); window.location.href = "/admin/panel";</script>');
 

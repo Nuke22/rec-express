@@ -5,7 +5,7 @@
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <div class="col-md-3 mb-2 mb-md-0">
                 <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                    Homepage
+                    Сформувати запит для вибору ЕНР:
                 </a>
             </div>
 
@@ -25,4 +25,21 @@
             </div>
         </header>
     </div>
+
+{# todo apply row 104 categories #}
+        <div>
+            {{ categories }}
+            <ul>
+                {% for category in categories %}
+                    {% set name = category.name %}
+                    <li>
+                        <input type="radio" name="{{ name }}" id="">
+                        <p>{{ name }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+    
 {% endblock %}
