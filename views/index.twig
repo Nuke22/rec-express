@@ -26,20 +26,22 @@
         </header>
     </div>
 
-{# todo apply row 104 categories #}
+{# todo add action to write type of resource to session #}
         <div>
-            {{ categories }}
-            <ul>
+            <fieldset>
+                <legend>Оберіть тип навчальної системи:</legend>
+            <form action="/apply-resource" method="post">
                 {% for category in categories %}
                     {% set name = category.name %}
-                    <li>
-                        <input type="radio" name="{{ name }}" id="">
-                        <p>{{ name }}</p>
-                    </li>
+                    <div>
+                        <input type="radio" name="category{{ loop.index }}" id="category{{ loop.index }}">
+                        <label for="category{{ loop.index }}">
+                            {{ name }}
+                        </label>
+                    </div>
                 {% endfor %}
-            </ul>
+                <button type="submit">Вибрати</button>
+            </form>
+            </fieldset>
         </div>
-
-
-    
 {% endblock %}

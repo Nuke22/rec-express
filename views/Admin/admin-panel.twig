@@ -68,7 +68,7 @@
                     <thead>
                     <tr>
                         <th>Назва</th>
-                        <th>Рейтинг</th>
+                        <th></th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -78,8 +78,8 @@
                         <tr>
                             <td>{{ category.title }}</td>
                             <td>{{ category.rate }}</td>
-                            <td><button class="change-btn">Змінити</button></td>
-                            <td><button class="delete-btn">Видалити</button></td>
+                            <td><a href="/edit-category/{{ category._id }}"s><button class="change-btn">Змінити</button></a></td>
+                            <td><a href="/delete-category/{{ category._id }}"><button class="delete-btn">Видалити</button></a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

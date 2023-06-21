@@ -1,0 +1,31 @@
+{% extends '../layout.twig' %}
+{% block body %}
+    <div class="container">
+        <div class="form-container">
+            <h1>Нова категорія</h1>
+
+            {% if message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            <form action="/edit-category/{{ category._id }}" method="post">
+                <div>
+                    <label for="title">Заголовок:</label>
+                    <input type="text" id="title" name="title" value="{{ category.title }}" required>
+                </div>
+                <div>
+                    <label for="type">Тип:</label>
+                    <input type="text" id="type" name="type" value="{{ category.type }}" required>
+                </div>
+                <div>
+                    <label for="type"></label>
+                    <input type="text" id="type" name="" value="{{ category.params. }}" required>
+                </div>
+                <button type="submit">Оновити</button>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

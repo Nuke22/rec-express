@@ -67,7 +67,7 @@ const Category = mongoose.model('Category', {
 
 const TypeOfResource = mongoose.model("TypeOfResource", {
     name: String
-})
+},'TypeOfResource')
 
 //TODO МiddleWare
 //Middleware для обробки JSON даних
@@ -265,6 +265,65 @@ app.post('/add', async (req, res) => {
     }
 });
 
+// TODO Обробник видалення категорії
+app.get('/delete-category/:id', authenticateUser, async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+
+        // Виконуємо операцію видалення категорії за її ID
+        await Category.findByIdAndDelete(categoryId);
+
+        return res.send('<script>alert("Категорія успішно видалена"); window.location.href = "/admin/panel";</script>');
+    } catch (error) {
+        console.error('Error during category deletion:', error);
+        return res.send('<script>alert("Виникла помилка під час видалення категорії"); window.history.back();</script>');
+    }
+});
+
+// TODO Обробник редагування категорії (показ форми та збереження змін)
+app.get('/edit-category/:id', authenticateUser, async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+
+        // Отримуємо категорію за її ID
+        const category = await Category.findById(categoryId);
+
+        // Передаємо дані категорії до шаблону для відображення у формі
+        return res.render('Admin/edit-category.twig', { category });
+    } catch (error) {
+        console.error('Error during category editing:', error);
+        return res.send('<script>alert("Виникла помилка під час редагування категорії"); window.history.back();</script>');
+    }
+});
+
+// TODO Обробник збереження змін у категорії
+app.post('/edit-category/:id', authenticateUser, async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+        const { title, type } = req.body;
+
+        // Оновлюємо значення полів категорії
+        await Category.findByIdAndUpdate(categoryId, { title, type });
+
+        return res.send('<script>alert("Категорія успішно оновлена"); window.location.href = "/admin/panel";</script>');
+    } catch (error) {
+        console.error('Error during category update:', error);
+        return res.send('<script>alert("Виникла помилка під час оновлення категорії"); window.history.back();</script>');
+    }
+});
+
+
+// TODO Обробник Типу категорій навчальних ресурсів
+
+app.post("/apply-resource", async (req, res) =>{
+    try {
+        const result = req.body
+        res.json(result)
+    } catch (error) {
+        console.error('Error during category update:', error);
+        return res.send('<script>alert("Виникла помилка під час того, шо мені лінь описувати, але шось пішло не так явно"); window.history.back();</script>');
+    }
+})
 
 
 // catch 404 and forward to error handler
