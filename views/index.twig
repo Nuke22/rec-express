@@ -27,21 +27,23 @@
     </div>
 
 {# todo add action to write type of resource to session #}
-        <div>
-            <fieldset>
-                <legend>Оберіть тип навчальної системи:</legend>
+    <div>
+        <fieldset>
+            <legend>Оберіть тип навчальної системи:</legend>
             <form action="/apply-resource" method="post">
-                {% for category in categories %}
-                    {% set name = category.name %}
-                    <div>
-                        <input type="checkbox" name="category{{ loop.index }}" id="category{{ loop.index }}">
-                        <label for="category{{ loop.index }}">
-                            {{ name }}
-                        </label>
-                    </div>
-                {% endfor %}
+                <div>
+                    <label for="type_of_resource">Оберіть тип навчальної системи:</label>
+                    <select name="type_of_resource" id="type_of_resource">
+                        {% for category in categories %}
+                            {% set name = category.name %}
+                            <option value="{{ name }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <button type="submit">Вибрати</button>
             </form>
-            </fieldset>
-        </div>
+
+        </fieldset>
+    </div>
+
 {% endblock %}
