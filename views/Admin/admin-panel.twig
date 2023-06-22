@@ -8,6 +8,7 @@
         }
 
         .admin-panel-left {
+
             width: 100%;
             padding: 20px;
         }
@@ -32,28 +33,29 @@
             border-collapse: collapse;
         }
 
-        th,
-        td {
+        th {
             padding: 8px;
             border-bottom: 1px solid #ccc;
             white-space: nowrap;
+        }
+
+        td {
+            text-align: center;
+            padding: 8px;
+            max-width: 300px;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 200px;
+            white-space: nowrap;
         }
 
-        .change-btn,
-        .delete-btn {
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
+        .operations {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .change-btn:hover,
-        .delete-btn:hover {
-            background-color: #0056b3;
+        button {
+            width: 100px;
         }
     </style>
 
@@ -61,8 +63,9 @@
         <div class="admin-panel-left">
             <h2>Вітаємо в панелі Адміністратора</h2>
             <p>Тут ви можете змінювати ваше наповнення</p>
-            <ul>
-                <li><a href="/admin/panel/add" class="add">Додати</a></li>
+            <ul style="display: flex; ">
+                <li style="margin-right: 10px"><a href="/admin/panel/add" class="add">Додати</a></li>
+                <li><a href="/" class="home">Повернутися на домашню сторінку</a></li>
             </ul>
         </div>
         <div class="admin-panel-right">
@@ -71,27 +74,34 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>Назва</th>
-                        <th>Тип</th>
-                        {% for cate in cat %}
-                        {% for param in cate.params %}
-                            <th>{{ param.title }}</th>
+                        <th>Операції</th>
+                        {% for category in cat %}
+                            <th>
+                                <a href="/edit-category/{{ category._id }}"><button class="btn btn-sm btn-outline-secondary">Змінити</button></a>
+                                <a href="/delete-category/{{ category._id }}"><button class="btn btn-sm btn-outline-secondary">Видалити</button></a>
+                            </th>
                         {% endfor %}
-                        {% endfor %}
-                        <th></th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for category in cat %}
+                    <tr>
+                        <th>Назва</th>
+                        {% for cate in cat %}
+                            <td>{{ cate.title }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th>Тип</th>
+                        {% for cate in cat %}
+                            <td>{{ cate.type }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% for param in cat[0].params %}
                         <tr>
-                            <td>{{ category.title }}</td>
-                            <td>{{ category.type }}</td>
-                            {% for param in category.params %}
+                            <th>{{ param.title }}</th>
+                            {% for cate in cat %}
                                 <td>{{ param.rating }}</td>
                             {% endfor %}
-                            <td><a href="/edit-category/{{ category._id }}"><button class="change-btn">Змінити</button></a></td>
-                            <td><a href="/delete-category/{{ category._id }}"><button class="delete-btn">Видалити</button></a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

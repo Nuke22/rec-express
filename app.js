@@ -35,7 +35,7 @@ app.use(session({
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-//TODO БАЗА ДАННИХ
+// TODO БАЗА ДАННИХ
 //Підключення до бази даних MongoDB
 mongoose.connect('mongodb://localhost:27017/express', {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {
@@ -341,10 +341,10 @@ app.post("/apply-resource", async (req, res) => {
     try {
         // Отримуємо вибрані типи ресурсів з тіла запиту
         // Зберігаємо вибрані типи ресурсів в сесії
-        req.session.selectedTof = req.body;
-        req.session.selectedTof
-        // Перенаправляємо користувача на іншу сторінку або рендеримо новий шаблон
-        res.redirect('/'); // При необхідності можна перенаправити на будь-яку іншу сторінку
+        let bulkData = req.body
+
+        req.session.selectedTOR = req.body;
+        res.redirect('/result'); // При необхідності можна перенаправити на будь-яку іншу сторінку
 
     } catch (error) {
         console.error('Error during applying resource:', error);

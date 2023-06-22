@@ -72,6 +72,15 @@ a {
 
   background-color: #00cc00;
 }
+.admin-panel li a.home {
+
+  background-color: cornflowerblue;
+}
+
+.admin-panel li a.home:hover {
+
+  background-color: #0e00cc;
+}
 
 .admin-panel li a.delete {
   background-color: red;
