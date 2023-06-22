@@ -215,43 +215,53 @@ app.post('/add', async (req, res) => {
             params: [
                 {
                     title: 'Інтерактивність',
-                    rating: rating1
+                    rating: rating1,
+                    index:1
                 },
                 {
                     title: 'Мультимедійність',
-                    rating: rating2
+                    rating: rating2,
+                    index:2
                 },
                 {
                     title: 'Можливість модифікації',
-                    rating: rating3
+                    rating: rating3,
+                    index:3
                 },
                 {
                     title: 'Кросплатформеність',
-                    rating: rating4
+                    rating: rating4,
+                    index: 4
                 },
                 {
                     title: 'Вільнопоширюваність',
-                    rating: rating5
+                    rating: rating5,
+                    index: 5
                 },
                 {
                     title: 'Архітектура',
-                    rating: rating6
+                    rating: rating6,
+                    index: 6
                 },
                 {
                     title: 'Функціональність',
-                    rating: rating7
+                    rating: rating7,
+                    index: 7,
                 },
                 {
                     title: 'Чисельність тем для опрацювання',
-                    rating: rating8
+                    rating: rating8,
+                    index: 8
                 },
                 {
                     title: 'Відповідність предметній області',
-                    rating: rating9
+                    rating: rating9,
+                    index: 9
                 },
                 {
                     title: 'Відповідність навчального змісту освітнім стандартам',
-                    rating: rating10
+                    rating: rating10,
+                    index: 10
                 },
             ]
 
@@ -302,8 +312,19 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
         const categoryId = req.params.id;
         const { title, type } = req.body;
 
-        // Оновлюємо значення полів категорії
+        // Оновлення назви та типу категорії
         await Category.findByIdAndUpdate(categoryId, { title, type });
+
+        // Оновлення параметрів категорії
+        const paramKeys = Object.keys(req.body).filter(key => key.startsWith('filter'));
+        for (const key of paramKeys) {
+            const index = key.replace('filter', '');
+            const rating = req.body[key];
+            await Category.findOneAndUpdate(
+                { _id: categoryId, 'params.index': index },
+                { $set: { 'params.$.rating': rating } }
+            );
+        }
 
         return res.send('<script>alert("Категорія успішно оновлена"); window.location.href = "/admin/panel";</script>');
     } catch (error) {
@@ -311,6 +332,7 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
         return res.send('<script>alert("Виникла помилка під час оновлення категорії"); window.history.back();</script>');
     }
 });
+
 
 
 // TODO Обробник Типу категорій навчальних ресурсів
