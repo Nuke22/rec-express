@@ -337,15 +337,21 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
 
 // TODO Обробник Типу категорій навчальних ресурсів
 
-app.post("/apply-resource", async (req, res) =>{
+app.post("/apply-resource", async (req, res) => {
     try {
-        const result = req.body
-        res.json(result)
+        // Отримуємо вибрані типи ресурсів з тіла запиту
+        // Зберігаємо вибрані типи ресурсів в сесії
+        req.session.selectedTof = req.body;
+        // Перенаправляємо користувача на іншу сторінку або рендеримо новий шаблон
+        res.redirect('/'); // При необхідності можна перенаправити на будь-яку іншу сторінку
+
     } catch (error) {
-        console.error('Error during category update:', error);
-        return res.send('<script>alert("Виникла помилка під час того, шо мені лінь описувати, але шось пішло не так явно"); window.history.back();</script>');
+        console.error('Error during applying resource:', error);
+        return res.status(500).send('Виникла помилка під час застосування ресурсу');
     }
-})
+});
+
+
 
 
 // catch 404 and forward to error handler

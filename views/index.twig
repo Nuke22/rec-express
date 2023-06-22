@@ -34,7 +34,7 @@
                 {% for category in categories %}
                     {% set name = category.name %}
                     <div>
-                        <input type="radio" name="category{{ loop.index }}" id="category{{ loop.index }}">
+                        <input type="checkbox" name="category{{ loop.index }}" id="category{{ loop.index }}">
                         <label for="category{{ loop.index }}">
                             {{ name }}
                         </label>
