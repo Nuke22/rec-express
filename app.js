@@ -121,7 +121,7 @@ app.get('/login', function (req, res, next) {
 
 //TODO Сторінка Результатів
 app.get('/result', function (req, res, next) {
-    res.render('User/result', {title: 'Результати'});
+    res.render('result', {title: 'Результати'});
 });
 // TODO Сторінка Додавання категорій
 app.get('/admin/panel/add', authenticateUser, (req, res) => {
