@@ -423,8 +423,25 @@ app.post("/apply-resource", async (req, res) => {
         }
 
 
-        // STEP 3 - EVALUATE THE WEIGHT OF EACH PARAMETER
-
+        // STEP 3 - EVALUATE THE WEIGHT OF EACH PARAMETER  !!
+        // there is a algo bug here  ---- else if (chosenImportance[i] > chosenImportance[h]) {
+                    // result = chosenImportance[i] - chosenImportance[h]
+        let weight_matrix = []
+        for (let h = 0; h < 10; h++) {
+            let line = []
+            for (let i = 0; i < 10; i++){
+                let result
+                if (chosenImportance[i] === chosenImportance[h]) {
+                    result = 1
+                } else if (chosenImportance[i] > chosenImportance[h]) {
+                    result = chosenImportance[i] - chosenImportance[h]
+                } else {
+                    result = 1/(chosenImportance[h] - chosenImportance[i])
+                }
+                line.push(result)
+            }
+            weight_matrix.push(line)
+        }
 
         // STEP 4 - MODIFYED Gn
 
