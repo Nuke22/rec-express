@@ -358,28 +358,79 @@ app.post("/apply-resource", async (req, res) => {
             chosenCheck[i] = parseInt(chosenCheck[i].slice(-1))
         }
 
-        const listOfSystemsThatFitTheCriteria = await Category.find({type: chosenType_of_resource});
+        const LOST = await Category.find({type: chosenType_of_resource});
 
         //working names
+        // LOST = list of Systems That Fits the criteria
+
         console.log(chosenCheck)
         console.log(chosenImportance)
         console.log(chosenType_of_resource)
         console.log("------title");
-        console.log(listOfSystemsThatFitTheCriteria[0].title);
+        console.log(LOST[0].title);
         console.log("------params");
-        console.log(listOfSystemsThatFitTheCriteria[0].params);
+        console.log(LOST[0].params);
         console.log("------params[0]");
-        console.log(listOfSystemsThatFitTheCriteria[0].params[0]);
+        console.log(LOST[0].params[0]);
         console.log("------rating");
-        console.log(listOfSystemsThatFitTheCriteria[0].params[0].rating);
+        console.log(LOST[0].params[0].rating);
         console.log("------length")
-        console.log(listOfSystemsThatFitTheCriteria.length)
+        console.log(LOST.length)
+        console.log("\n\n\n\n")
 
         // computations
-        //matrix creation
-        for (let A_G_number = 1; A_G_number <= chosenCheck.length; i++) {
-            
+
+        // STEP1 - COMPUTING THE PULL OF MATRIX
+        // this is 3-dimensional matrix in format: matrix3d_forAGn[pick AGn from 0 to 9][pick a row for selected matrix][pick index]
+        //    matrix3d_forAGn[AGn][h][i]
+        const matrix3d_forAGn = []
+        for (let AGn = 0; AGn < chosenCheck.length; AGn++) {
+            let matrix = []
+            for (let h = 0; h < LOST.length; h++) {
+                let line = []
+                for (let i = 0; i < LOST.length; i++){
+                    let result
+                    let h_rating = LOST[h].params[AGn].rating
+                    let i_rating = LOST[i].params[AGn].rating
+                    if (i_rating === h_rating) {
+                        result = 1
+                    } else if (i_rating > h_rating) {
+                        result = i_rating - h_rating
+                    } else {
+                        result = 1/(h_rating - i_rating)
+                    }
+                    line.push(result)
+                }
+                matrix.push(line)
+            }
+            matrix3d_forAGn.push(matrix)
         }
+
+
+        // STEP 2 - FINDING AN INVERTED SUM OF COLUMNS AND PUTTING IT INTO THE ARRAY
+        let Gn_matrix = []
+        for (let Gn = 0; Gn < matrix3d_forAGn.length; Gn++) {
+            let Gn_line = []
+            for (let i = 0; i < LOST.length; i++) {
+                let result = 0
+                for(let h = 0; h < LOST.length; h++){
+                    result += matrix3d_forAGn[Gn][h][i]
+                }
+                let inverted_result = 1/result
+                Gn_line.push(inverted_result)
+            }
+            Gn_matrix.push(Gn_line)
+        }
+
+
+        // STEP 3 - EVALUATE THE WEIGHT OF EACH PARAMETER
+
+
+        // STEP 4 - MODIFYED Gn
+
+
+
+
 
         res.redirect('/result')
     } catch (error) {
