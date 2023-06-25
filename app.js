@@ -124,9 +124,16 @@ app.get('/result', function (req, res, next) {
     res.render('result', {title: 'Результати'});
 });
 // TODO Сторінка Додавання категорій
-app.get('/admin/panel/add', authenticateUser, (req, res) => {
-    res.render('Admin/add-category', { title: 'Додати категорію' });
+app.get('/admin/panel/add', authenticateUser, async (req, res) => {
+    const listOfSystems = await TypeOfResource.find({})
+    console.log(listOfSystems)
+    res.render('Admin/add-category', { title: 'Додати категорію', categories: listOfSystems });
 });
+//app.get('/', async (req, res, next) => {
+//     const categories = await TypeOfResource.find();
+//     console.log(categories)
+//     res.render('index', {title: 'Домашня сторінка', user: req.session.user, categories: categories});
+// });
 
 // TODO  Обробник форми реєстрації
 // Роутер для обробки реєстрації
@@ -200,7 +207,7 @@ app.get('/logout', (req, res) => {
 // TODO Обробник форми Додавання категорій
 app.post('/add', async (req, res) => {
     try {
-        const {title,type,rating1,rating2,rating3,rating4,rating5,rating6,rating7,rating8,rating9,rating10} = req.body;
+        let {title,type,rating1,rating2,rating3,rating4,rating5,rating6,rating7,rating8,rating9,rating10} = req.body;
 
         // Перевірка, чи категорія з таким ім'ям вже існує
         const existingCategory = await User.findOne({title});
@@ -340,12 +347,28 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
 app.post("/apply-resource", async (req, res) => {
     try {
         // Отримуємо вибрані типи ресурсів з тіла запиту
-        // Зберігаємо вибрані типи ресурсів в сесії
         let bulkData = req.body
+        let chosenType_of_resource = bulkData.type_of_resource
+        let chosenImportance = bulkData.importance
+        let chosenCheck = bulkData.check
 
-        req.session.selectedTOR = req.body;
-        res.redirect('/result'); // При необхідності можна перенаправити на будь-яку іншу сторінку
+        //put numbers only into chosenImportance
+        for ( let i = 0; i < chosenImportance.length; i++) {
+            chosenImportance[i] = parseInt(chosenImportance[i])
+        }
 
+        //put numbers only into chosenCheck
+        for (let i = 0; i < chosenCheck.length; i++) {
+            chosenCheck[i] = parseInt(chosenCheck[i].slice(-1))
+        }
+        //debug deleteme
+        console.log(chosenCheck)
+        console.log(chosenImportance)
+        console.log(chosenType_of_resource)
+
+        const listOfSystems = await Category.find({type: chosenType_of_resource});
+        console.log(listOfSystems);
+        res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
         return res.status(500).send('Виникла помилка під час застосування ресурсу');
