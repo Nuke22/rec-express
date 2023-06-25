@@ -86,26 +86,32 @@
                     <tbody>
                     <tr>
                         <th>Назва</th>
-                        {% for cate in cat %}
-                            <td>{{ cate.title }}</td>
+                        {% for category in cat %}
+                            <td>{{ category.title }}</td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th>Тип</th>
-                        {% for cate in cat %}
-                            <td>{{ cate.type }}</td>
+                        {% for category in cat %}
+                            <td>{{ category.type }}</td>
                         {% endfor %}
                     </tr>
                     {% for param in cat[0].params %}
                         <tr>
                             <th>{{ param.title }}</th>
-                            {% for cate in cat %}
-                                <td>{{ param.rating }}</td>
+                            {% for category in cat %}
+                                {% for categoryParam in category.params %}
+                                    {% if categoryParam.title == param.title %}
+                                        <td>{{ categoryParam.rating }}</td>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
+
+
             </div>
         </div>
     </div>

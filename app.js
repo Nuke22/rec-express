@@ -129,11 +129,6 @@ app.get('/admin/panel/add', authenticateUser, async (req, res) => {
     console.log(listOfSystems)
     res.render('Admin/add-category', { title: 'Додати категорію', categories: listOfSystems });
 });
-//app.get('/', async (req, res, next) => {
-//     const categories = await TypeOfResource.find();
-//     console.log(categories)
-//     res.render('index', {title: 'Домашня сторінка', user: req.session.user, categories: categories});
-// });
 
 // TODO  Обробник форми реєстрації
 // Роутер для обробки реєстрації
@@ -304,9 +299,10 @@ app.get('/edit-category/:id', authenticateUser, async (req, res) => {
 
         // Отримуємо категорію за її ID
         const category = await Category.findById(categoryId);
+        const selectors = await TypeOfResource.find();
 
         // Передаємо дані категорії до шаблону для відображення у формі
-        return res.render('Admin/edit-category.twig', { category });
+        return res.render('Admin/edit-category.twig', { category, selectors });
     } catch (error) {
         console.error('Error during category editing:', error);
         return res.send('<script>alert("Виникла помилка під час редагування категорії"); window.history.back();</script>');
@@ -361,17 +357,34 @@ app.post("/apply-resource", async (req, res) => {
         for (let i = 0; i < chosenCheck.length; i++) {
             chosenCheck[i] = parseInt(chosenCheck[i].slice(-1))
         }
-        //debug deleteme
+
+        const listOfSystemsThatFitTheCriteria = await Category.find({type: chosenType_of_resource});
+
+        //working names
         console.log(chosenCheck)
         console.log(chosenImportance)
         console.log(chosenType_of_resource)
+        console.log("------title");
+        console.log(listOfSystemsThatFitTheCriteria[0].title);
+        console.log("------params");
+        console.log(listOfSystemsThatFitTheCriteria[0].params);
+        console.log("------params[0]");
+        console.log(listOfSystemsThatFitTheCriteria[0].params[0]);
+        console.log("------rating");
+        console.log(listOfSystemsThatFitTheCriteria[0].params[0].rating);
+        console.log("------length")
+        console.log(listOfSystemsThatFitTheCriteria.length)
 
-        const listOfSystems = await Category.find({type: chosenType_of_resource});
-        console.log(listOfSystems);
+        // computations
+        //matrix creation
+        for (let A_G_number = 1; A_G_number <= chosenCheck.length; i++) {
+            
+        }
+
         res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
-        return res.status(500).send('Виникла помилка під час застосування ресурсу');
+        return res.status(500).send('Необхідно посатвити галочку хоча б біля 1 параметра!');
     }
 });
 
