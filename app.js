@@ -395,9 +395,9 @@ app.post("/apply-resource", async (req, res) => {
                     if (i_rating === h_rating) {
                         result = 1
                     } else if (i_rating > h_rating) {
-                        result = i_rating - h_rating
+                        result = i_rating - h_rating + 1
                     } else {
-                        result = 1/(h_rating - i_rating)
+                        result = 1/(h_rating - i_rating +1)
                     }
                     line.push(result)
                 }
@@ -434,18 +434,26 @@ app.post("/apply-resource", async (req, res) => {
                 if (chosenImportance[i] === chosenImportance[h]) {
                     result = 1
                 } else if (chosenImportance[i] > chosenImportance[h]) {
-                    result = chosenImportance[i] - chosenImportance[h]
+                    result = chosenImportance[i] - chosenImportance[h] +1
                 } else {
-                    result = 1/(chosenImportance[h] - chosenImportance[i])
+                    result = 1/(chosenImportance[h] - chosenImportance[i] + 1)
                 }
                 line.push(result)
             }
             weight_matrix.push(line)
         }
 
-        // STEP 4 - MODIFYED Gn
-
-
+        // STEP 4 - FINDING AN INVERTED SUM OF COLUMNS AND PUTTING IT INTO THE ARRAY (for weights)
+        let power_coefficient_line = []
+        for (let i = 0; i < 10; i++) {
+            let power_coefficient_value = 0
+            for(let h = 0; h < 10; h++){
+                power_coefficient_value += weight_matrix[h][i]
+            }
+            let inverted_result = 1/power_coefficient_value
+            power_coefficient_line.push(inverted_result)
+        }
+        console.log(power_coefficient_line)
 
 
 
