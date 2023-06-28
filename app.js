@@ -476,10 +476,27 @@ app.post("/apply-resource", async (req, res) => {
             Gn_matrix_with_powers.push(Gn_line_with_powers)
         }
 
-        //STEP - FIND MINIMUM FOR EVERY ITEM
+        //STEP - DECLARE Pn - PARAMETERS FOR EVERY SYSTEM
+        let Pn_matrix = []
+        for (let i = 0; i < Gn_matrix_with_powers[0].length; i++) {
+            let Pn_line = []
+            for (let h = 0; h < Gn_matrix_with_powers.length; h++) {
+                let value = Gn_matrix_with_powers[h][i]
+                Pn_line.push(value)
+            }
+            Pn_matrix.push(Pn_line)
+        }
 
+        // STEP - FIND MINIMUM FOR Pn => create D_line
+        let D_line = []
+        for ( let h = 0; h < Pn_matrix.length; h++) {
+            let result = Math.min(...Pn_matrix[h])
+            D_line.push(result)
+        }
 
-
+        // STEP - FIND MAXIMUM FOR D_line and therefore the best solution for the problem. <- modification step (sort + index) <- for some reason wrong sys wins, debug is needed
+        const highest_score = Math.max(...D_line)
+        const winner_index = D_line.indexOf(highest_score);
         res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
