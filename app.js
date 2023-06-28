@@ -384,7 +384,7 @@ app.post("/apply-resource", async (req, res) => {
         // this is 3-dimensional matrix in format: matrix3d_forAGn[pick AGn from 0 to 9][pick a row for selected matrix][pick index]
         //    matrix3d_forAGn[AGn][h][i]
         const matrix3d_forAGn = []
-        for (let AGn = 0; AGn < chosenCheck.length; AGn++) {
+        for (let AGn = 0; AGn < 10; AGn++) {
             let matrix = []
             for (let h = 0; h < LOST.length; h++) {
                 let line = []
@@ -406,15 +406,21 @@ app.post("/apply-resource", async (req, res) => {
             matrix3d_forAGn.push(matrix)
         }
 
+        //STEP - PICK CHOSEN PARAMS FROM matrix3d_forAGn AND PUT THEM INSIDE NEW MATRIX
+        let matrix3d_forAGn_filtered = []
+        for (let i = 0; i < chosenCheck.length; i++) {
+            let matrix_element = matrix3d_forAGn[chosenCheck[i]]
+            matrix3d_forAGn_filtered.push(matrix_element)
+        }
 
-        // STEP 2 - FINDING AN INVERTED SUM OF COLUMNS AND PUTTING IT INTO THE ARRAY
+        // STEP - FINDING AN INVERTED SUM OF COLUMNS AND PUTTING IT INTO THE ARRAY
         let Gn_matrix = []
-        for (let Gn = 0; Gn < matrix3d_forAGn.length; Gn++) {
+        for (let Gn = 0; Gn < matrix3d_forAGn_filtered.length; Gn++) {
             let Gn_line = []
             for (let i = 0; i < LOST.length; i++) {
                 let result = 0
                 for(let h = 0; h < LOST.length; h++){
-                    result += matrix3d_forAGn[Gn][h][i]
+                    result += matrix3d_forAGn_filtered[Gn][h][i]
                 }
                 let inverted_result = 1/result
                 Gn_line.push(inverted_result)
@@ -422,14 +428,18 @@ app.post("/apply-resource", async (req, res) => {
             Gn_matrix.push(Gn_line)
         }
 
+        // STEP - PICK ONLY CHOSEN PARAMS FOR WEIGHTS IN ORDER TO BUILD A-MATRIX
+        let chosenImportance_filtered = []
+        for (let i = 0; i < chosenCheck.length; i++) {
+            let element = chosenImportance[chosenCheck[i]]
+            chosenImportance_filtered.push(element)
+        }
 
-        // STEP 3 - EVALUATE THE WEIGHT OF EACH PARAMETER  !!
-        // there is a algo bug here  ---- else if (chosenImportance[i] > chosenImportance[h]) {
-                    // result = chosenImportance[i] - chosenImportance[h]
+        // STEP - EVALUATE THE WEIGHT OF EACH PARAMETER
         let weight_matrix = []
-        for (let h = 0; h < 10; h++) {
+        for (let h = 0; h < chosenCheck.length; h++) {
             let line = []
-            for (let i = 0; i < 10; i++){
+            for (let i = 0; i < chosenCheck.length; i++){
                 let result
                 if (chosenImportance[i] === chosenImportance[h]) {
                     result = 1
@@ -443,7 +453,7 @@ app.post("/apply-resource", async (req, res) => {
             weight_matrix.push(line)
         }
 
-        // STEP 4 - FINDING AN INVERTED SUM OF COLUMNS AND PUTTING IT INTO THE ARRAY (for weights)
+        // STEP - FINDING AN INVERTED SUM OF COLUMNS AND PUTTING IT INTO THE ARRAY (for weights)
         let power_coefficient_line = []
         for (let i = 0; i < 10; i++) {
             let power_coefficient_value = 0
@@ -454,6 +464,12 @@ app.post("/apply-resource", async (req, res) => {
             power_coefficient_line.push(inverted_result)
         }
         console.log(power_coefficient_line)
+
+        //STEP - APPLY POWERS TO Gn
+        Gn_matrix_with_powers = []
+
+
+        //STEP - FIND MINIMUM FOR EVERY ITEM
 
 
 
