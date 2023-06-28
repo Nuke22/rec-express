@@ -441,12 +441,12 @@ app.post("/apply-resource", async (req, res) => {
             let line = []
             for (let i = 0; i < chosenCheck.length; i++){
                 let result
-                if (chosenImportance[i] === chosenImportance[h]) {
+                if (chosenImportance_filtered[i] === chosenImportance_filtered[h]) {
                     result = 1
-                } else if (chosenImportance[i] > chosenImportance[h]) {
-                    result = chosenImportance[i] - chosenImportance[h] +1
+                } else if (chosenImportance_filtered[i] > chosenImportance_filtered[h]) {
+                    result = chosenImportance_filtered[i] - chosenImportance_filtered[h] +1
                 } else {
-                    result = 1/(chosenImportance[h] - chosenImportance[i] + 1)
+                    result = 1/(chosenImportance_filtered[h] - chosenImportance_filtered[i] + 1)
                 }
                 line.push(result)
             }
@@ -455,9 +455,9 @@ app.post("/apply-resource", async (req, res) => {
 
         // STEP - FINDING AN INVERTED SUM OF COLUMNS AND PUTTING IT INTO THE ARRAY (for weights)
         let power_coefficient_line = []
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < chosenCheck.length; i++) {
             let power_coefficient_value = 0
-            for(let h = 0; h < 10; h++){
+            for(let h = 0; h < chosenCheck.length; h++){
                 power_coefficient_value += weight_matrix[h][i]
             }
             let inverted_result = 1/power_coefficient_value
@@ -466,8 +466,15 @@ app.post("/apply-resource", async (req, res) => {
         console.log(power_coefficient_line)
 
         //STEP - APPLY POWERS TO Gn
-        Gn_matrix_with_powers = []
-
+        let Gn_matrix_with_powers = []
+        for (let h = 0; h < Gn_matrix.length; h++){
+            let Gn_line_with_powers = []
+            for (let i = 0; i < Gn_matrix[0].length; i++){
+                let exponentiation_value = Gn_matrix[h][i] ** power_coefficient_line[h]
+                Gn_line_with_powers.push(exponentiation_value)
+            }
+            Gn_matrix_with_powers.push(Gn_line_with_powers)
+        }
 
         //STEP - FIND MINIMUM FOR EVERY ITEM
 
