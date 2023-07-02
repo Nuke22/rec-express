@@ -422,16 +422,16 @@ app.post("/apply-resource", async (req, res) => {
 
         // STEP - EVALUATE THE WEIGHT OF EACH PARAMETER
         let weight_matrix = []
-        for (let h = 0; h < chosenCheck.length; h++) {
+        for (let i = 0; i < chosenCheck.length; i++) {
             let line = []
-            for (let i = 0; i < chosenCheck.length; i++){
+            for (let h = 0; h < chosenCheck.length; h++){
                 let result
                 if (chosenImportance_filtered[i] === chosenImportance_filtered[h]) {
                     result = 1
                 } else if (chosenImportance_filtered[i] > chosenImportance_filtered[h]) {
-                    result = chosenImportance_filtered[i] - chosenImportance_filtered[h] +1
+                    result = chosenImportance_filtered[i] - chosenImportance_filtered[h]
                 } else {
-                    result = 1/(chosenImportance_filtered[h] - chosenImportance_filtered[i] + 1)
+                    result = 1/(chosenImportance_filtered[h] - chosenImportance_filtered[i])
                 }
                 line.push(result)
             }
