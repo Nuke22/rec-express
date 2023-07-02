@@ -371,9 +371,9 @@ app.post("/apply-resource", async (req, res) => {
         const matrix3d_forAGn = []
         for (let AGn = 0; AGn < 10; AGn++) {
             let matrix = []
-            for (let h = 0; h < LOST.length; h++) {
+            for (let i = 0; i < LOST.length; i++) {
                 let line = []
-                for (let i = 0; i < LOST.length; i++){
+                for (let h = 0; h < LOST.length; h++){
                     let result
                     let h_rating = LOST[h].params[AGn].rating
                     let i_rating = LOST[i].params[AGn].rating
