@@ -363,21 +363,6 @@ app.post("/apply-resource", async (req, res) => {
         //working names
         // LOST = list of Systems That Fits the criteria
 
-        console.log(chosenCheck)
-        console.log(chosenImportance)
-        console.log(chosenType_of_resource)
-        console.log("------title");
-        console.log(LOST[0].title);
-        console.log("------params");
-        console.log(LOST[0].params);
-        console.log("------params[0]");
-        console.log(LOST[0].params[0]);
-        console.log("------rating");
-        console.log(LOST[0].params[0].rating);
-        console.log("------length")
-        console.log(LOST.length)
-        console.log("\n\n\n\n")
-
         // computations
 
         // STEP1 - COMPUTING THE PULL OF MATRIX
@@ -395,9 +380,9 @@ app.post("/apply-resource", async (req, res) => {
                     if (i_rating === h_rating) {
                         result = 1
                     } else if (i_rating > h_rating) {
-                        result = i_rating - h_rating + 1
+                        result = i_rating - h_rating
                     } else {
-                        result = 1/(h_rating - i_rating +1)
+                        result = 1/(h_rating - i_rating)
                     }
                     line.push(result)
                 }
