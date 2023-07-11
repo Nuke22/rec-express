@@ -1,7 +1,24 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-    <div class="container">
+    <style>
+        body {
+            background: rgba(13, 166, 217, 0.1);
+
+        }
+        .zoom-effect {
+            transition: transform 0.3s;
+
+
+        }
+
+        .zoom-effect:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+        }
+    </style>
+    <div class="container ">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <div class="col-md-3 mb-2 mb-md-0">
                 <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
@@ -19,39 +36,19 @@
                     {% endif %}
 
                 {% else %}
-                    <a href="{{ path:('login') }}"><button type="button" class="btn btn-outline-primary me-2">Увійти</button></a>
-                    <a href="{{ path:('register') }}"><button type="button" class="btn btn-primary">Зареєструватися</button></a>
+                    <a href="{{ path:('login') }}"><button type="button" class="btn btn-outline-primary me-2  zoom-effect">Увійти</button></a>
+                    <a href="{{ path:('register') }}"><button type="button" class="btn btn-primary zoom-effect">Зареєструватися</button></a>
                 {% endif %}
             </div>
         </header>
     </div>
-    <style>
-        .custom-input {
-            width: 500px; /* Задайте бажану ширину */
-        }
 
-        .text-center {
-            text-align: center;
-        }
-    </style>
-
-    <style>
-        .custom-input {
-            width: 500px;
-            text-align: center;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-    </style>
-
-    <form action="/apply-resource" method="post">
-        <div class="mb-3">
+    <form action="/apply-resource" method="post" class="container">
+        <div>
             <fieldset>
                 <legend>Оберіть тип навчальної системи:</legend>
-                <div class="mb-3 text-center">
-                    <select class="form-select" name="type_of_resource" id="type_of_resource">
+                <div class="d-flex align-items-center">
+                    <select class="form-select w-200 zoom-effect" name="type_of_resource" id="type_of_resource">
                         {% for category in categories %}
                             {% set name = category.name %}
                             <option value="{{ name }}">{{ name }}</option>
@@ -61,125 +58,125 @@
             </fieldset>
         </div>
 
-        <div class="mb-3">
+        <div>
             <fieldset>
-                <legend>Оберіть бажані критерії</legend>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <legend style="margin-top: 30px">Оберіть бажані критерії</legend>
+
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G0" id="k1">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G0" id="k1">
                         <label class="form-check-label" for="k1">Інтерактивність</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G1" id="k2">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G1" id="k2">
                         <label class="form-check-label" for="k2">Мультимедійність</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G2" id="k3">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G2" id="k3">
                         <label class="form-check-label" for="k3">Можливість модифікації</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G3" id="k4">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G3" id="k4">
                         <label class="form-check-label" for="k4">Кросплатформеність</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G4" id="k5">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G4" id="k5">
                         <label class="form-check-label" for="k5">Вільнопоширюваність</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G5" id="k6">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G5" id="k6">
                         <label class="form-check-label" for="k6">Архітектура</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G6" id="k7">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G6" id="k7">
                         <label class="form-check-label" for="k7">Функціональність</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G7" id="k8">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G7" id="k8">
                         <label class="form-check-label" for="k8">Чисельність тем для опрацювання</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G8" id="k9">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G8" id="k9">
                         <label class="form-check-label" for="k9">Відповідність предметній області</label>
                     </div>
                 </div>
-                <div class="mb-3 text-center">
-                    <div class="d-inline-block">
-                        <select class="form-select custom-input" name="importance">
+                <div class="zoom-effect">
+                    <div class="form-check d-flex align-items-center my-3">
+                        <input class="form-check-input" type="checkbox" name="check" value="G9" id="k10">
+                        <select class="form-select mx-3" name="importance" style="width: 100px;">
                             {% for value in 1..9 %}
                                 <option value="{{ value }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-check-input" type="checkbox" name="check" value="G9" id="k10">
                         <label class="form-check-label" for="k10">Відповідність навчального змісту освітнім стандартам</label>
                     </div>
                 </div>
             </fieldset>
         </div>
-        <div class="text-center">
+        <div class="text-center my-3">
             <button class="btn btn-primary" type="submit">Вибрати</button>
         </div>
     </form>
-
-
 {% endblock %}
+s
