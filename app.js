@@ -495,6 +495,15 @@ app.post("/apply-resource", async (req, res) => {
             // req.session.LOST_sorted.push(LOST[index])
             LOST_sorted.push(LOST[index])
         }
+
+        // STEP - sorting P parameters in order to match winners
+        let Pn_matrix_sorted = []
+        for (let i = 0; i < winners_index.length; i++) {
+            let num = winners_index[i]
+            let line = Pn_matrix[num]
+            Pn_matrix_sorted.push(line)
+            LOST_sorted[i]._doc.Pn_param = line
+        }
         req.session.LOST_sorted = LOST_sorted
         res.redirect('/result')
     } catch (error) {
