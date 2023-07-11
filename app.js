@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const {Int32, Double} = require("mongodb");
@@ -121,7 +122,9 @@ app.get('/login', function (req, res, next) {
 
 //TODO Сторінка Результатів
 app.get('/result', function (req, res, next) {
-    res.render('result', {title: 'Результати'});
+    const LOST_sorted1 = req.session.LOST_sorted
+    console.log(LOST_sorted1)
+    res.render('result', {title: 'Результати', systems:LOST_sorted1});
 });
 // TODO Сторінка Додавання категорій
 app.get('/admin/panel/add', authenticateUser, async (req, res) => {
@@ -479,9 +482,20 @@ app.post("/apply-resource", async (req, res) => {
             D_line.push(result)
         }
 
-        // STEP - FIND MAXIMUM FOR D_line and therefore the best solution for the problem. <- modification step (sort + index) <- for some reason wrong sys wins, debug is needed
-        const highest_score = Math.max(...D_line)
-        const winner_index = D_line.indexOf(highest_score);
+        // STEP - PUT SYSTEMS IN THE RIGHT ORDER
+        let D_line_sorted = [...D_line]
+
+        let LOST_sorted = []
+        D_line_sorted.sort((a, b) => b -a)
+        let winners_index = []
+        for (let i = 0; i < D_line.length; i++) {
+            const index = D_line.indexOf(D_line_sorted[i])
+            D_line[index] = 0
+            winners_index.push(index)
+            // req.session.LOST_sorted.push(LOST[index])
+            LOST_sorted.push(LOST[index])
+        }
+        req.session.LOST_sorted = LOST_sorted
         res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
