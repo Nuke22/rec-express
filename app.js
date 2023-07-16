@@ -126,23 +126,44 @@ app.get('/result', function (req, res, next) {
 
     //STEP - CSS MATH
     // tilts_array - values for rotate CSS function
-    for (let i = 0; i < LOST_sorted1.length; i++) {
+    for (let i = 0; i < LOST_sorted1.length; i++) {     // 1 system level
         let current_Pn_params = LOST_sorted1[i].Pn_param
 
         let tilt_array = []
-        let quarter_array = []
-        for (let j = 0; j < current_Pn_params.length; j++){
+        let x_y_array = []
+        for (let j = 0; j < current_Pn_params.length; j++){     // 1 parameter level
             let tilt = (360 / current_Pn_params.length) * j
             tilt_array.push(tilt - 90)  // making it start from top
             let quarter = Math.floor(tilt / 90) + 1
-            // quarter_array.push(quarter)
-            let sin = Math.sin(tilt) * current_Pn_params[i] // horizontal
-            let cos = Math.cos(tilt) * current_Pn_params[i] // vertical
-            if (quarter == 1) {
-
+            let sin_in_percent = Math.floor(Math.sin(tilt) * current_Pn_params[i] * 50) // horizontal
+            let cos_in_percent = Math.floor(Math.cos(tilt) * current_Pn_params[i] * 50) // vertical
+            let x_y = []
+            if        (quarter == 1) {
+                let x_coord = 50 + sin_in_percent
+                let y_coord = 50 - cos_in_percent
+                x_y.push(x_coord)
+                x_y.push(y_coord)
+            } else if (quarter == 2) {
+                let x_coord = 50 + sin_in_percent
+                let y_coord = 50 + cos_in_percent
+                x_y.push(x_coord)
+                x_y.push(y_coord)
+            } else if (quarter == 3) {
+                let x_coord = 50 - sin_in_percent
+                let y_coord = 50 + cos_in_percent
+                x_y.push(x_coord)
+                x_y.push(y_coord)
+            } else if (quarter == 4) {
+                let x_coord = 50 - sin_in_percent
+                let y_coord = 50 - cos_in_percent
+                x_y.push(x_coord)
+                x_y.push(y_coord)
             }
+            x_y_array.push(x_y)
 
         }
+        LOST_sorted1[i].tiltArray = tilt_array
+        LOST_sorted1[i].xyArray = x_y_array
 
     }
     res.render('result', {title: 'Результати', systems:LOST_sorted1});
