@@ -122,8 +122,29 @@ app.get('/login', function (req, res, next) {
 
 //TODO Сторінка Результатів
 app.get('/result', function (req, res, next) {
-    const LOST_sorted1 = req.session.LOST_sorted
-    console.log(LOST_sorted1)
+    let LOST_sorted1 = req.session.LOST_sorted
+
+    //STEP - CSS MATH
+    // tilts_array - values for rotate CSS function
+    for (let i = 0; i < LOST_sorted1.length; i++) {
+        let current_Pn_params = LOST_sorted1[i].Pn_param
+
+        let tilt_array = []
+        let quarter_array = []
+        for (let j = 0; j < current_Pn_params.length; j++){
+            let tilt = (360 / current_Pn_params.length) * j
+            tilt_array.push(tilt - 90)  // making it start from top
+            let quarter = Math.floor(tilt / 90) + 1
+            // quarter_array.push(quarter)
+            let sin = Math.sin(tilt) * current_Pn_params[i] // horizontal
+            let cos = Math.cos(tilt) * current_Pn_params[i] // vertical
+            if (quarter == 1) {
+
+            }
+
+        }
+
+    }
     res.render('result', {title: 'Результати', systems:LOST_sorted1});
 });
 // TODO Сторінка Додавання категорій
@@ -357,7 +378,9 @@ app.post("/apply-resource", async (req, res) => {
         }
 
         //put numbers only into chosenCheck
+        let name_of_each_vertex = []
         for (let i = 0; i < chosenCheck.length; i++) {
+            name_of_each_vertex[i] = chosenCheck[i].slice(0, -2)
             chosenCheck[i] = parseInt(chosenCheck[i].slice(-1))
         }
 
@@ -503,6 +526,13 @@ app.post("/apply-resource", async (req, res) => {
             let line = Pn_matrix[num]
             Pn_matrix_sorted.push(line)
             LOST_sorted[i]._doc.Pn_param = line
+        }
+
+        // STEP - TRANSFIGURE Pn-MATRIX VALUES INTO THE CSS-READY VALUES
+        number_of_vertices = LOST_sorted.length
+        // name_of_each_vertex
+        for (let i = 0; i < LOST_sorted.length; i++){
+
         }
         req.session.LOST_sorted = LOST_sorted
         res.redirect('/result')

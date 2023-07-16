@@ -8,7 +8,10 @@
     {% for system in systems %}
         <tr>
             <td><h2>{{ system.title }}</h2></td>
-            <td><div></div></td>
+            <td><div class="polygon"
+                     style ="clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);">
+                </div>
+            </td>
         </tr>
     {% endfor %}
 </table>

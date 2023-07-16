@@ -2,6 +2,21 @@
 
 {% block body %}
     <style>
+        body {
+            background: rgba(13, 166, 217, 0.1);
+
+        }
+
+        .zoom-effect {
+            transition: transform 0.3s;
+
+
+        }
+
+        .zoom-effect:hover {
+            transform: scale(1.1)
+        }
+
         .admin-panel {
             display: flex;
             flex-direction: column;
@@ -57,6 +72,9 @@
         button {
             width: 100px;
         }
+        .home{
+            margin-left: 15px;
+        }
     </style>
 
     <div class="admin-panel">
@@ -64,8 +82,8 @@
             <h2>Вітаємо в панелі Адміністратора</h2>
             <p>Тут ви можете змінювати ваше наповнення</p>
             <ul style="display: flex; ">
-                <li style="margin-right: 10px"><a href="/admin/panel/add" class="add">Додати</a></li>
-                <li><a href="/" class="home">Повернутися на домашню сторінку</a></li>
+                <li style="margin-right: 10px"><a href="/admin/panel/add" class="add btn btn-primary zoom-effect">Додати</a></li>
+                <li><a href="/" class="home btn btn-primary zoom-effect">Повернутися на домашню сторінку</a></li>
             </ul>
         </div>
         <div class="admin-panel-right">
@@ -77,8 +95,12 @@
                         <th>Операції</th>
                         {% for category in cat %}
                             <th>
-                                <a href="/edit-category/{{ category._id }}"><button class="btn btn-sm btn-outline-secondary">Змінити</button></a>
-                                <a href="/delete-category/{{ category._id }}"><button class="btn btn-sm btn-outline-secondary">Видалити</button></a>
+                                <a href="/edit-category/{{ category._id }}">
+                                    <button class="btn btn-sm btn-outline-secondary">Змінити</button>
+                                </a>
+                                <a href="/delete-category/{{ category._id }}">
+                                    <button class="btn btn-sm btn-outline-secondary">Видалити</button>
+                                </a>
                             </th>
                         {% endfor %}
                     </tr>
