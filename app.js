@@ -135,8 +135,9 @@ app.get('/result', function (req, res, next) {
             let tilt = (360 / current_Pn_params.length) * j
             tilt_array.push(tilt - 90)  // making it start from top
             let quarter = Math.floor(tilt / 90) + 1
-            let sin_in_percent = Math.floor(Math.sin(tilt) * current_Pn_params[i] * 50) // horizontal
-            let cos_in_percent = Math.floor(Math.cos(tilt) * current_Pn_params[i] * 50) // vertical
+            let tiltInRadians = tilt * (Math.PI / 180);
+            let sin_in_percent = Math.sin(tiltInRadians) * current_Pn_params[i] * 50 // horizontal
+            let cos_in_percent = Math.cos(tiltInRadians) * current_Pn_params[i] * 50 // vertical
             let x_y = []
             if        (quarter == 1) {
                 let x_coord = 50 + sin_in_percent
@@ -164,7 +165,6 @@ app.get('/result', function (req, res, next) {
         }
         LOST_sorted1[i].tiltArray = tilt_array
         LOST_sorted1[i].xyArray = x_y_array
-
     }
     res.render('result', {title: 'Результати', systems:LOST_sorted1});
 });
