@@ -136,8 +136,8 @@ app.get('/result', function (req, res, next) {
             tilt_array.push(tilt - 90)  // making it start from top
             let quarter = Math.floor(tilt / 90) + 1
             let tiltInRadians = tilt * (Math.PI / 180);
-            let sin_in_percent = Math.sin(tiltInRadians) * current_Pn_params[i] * 50 // horizontal
-            let cos_in_percent = Math.cos(tiltInRadians) * current_Pn_params[i] * 50 // vertical
+            let sin_in_percent = Math.round(Math.sin(tiltInRadians) * current_Pn_params[i] * 50) // horizontal
+            let cos_in_percent = Math.round(Math.cos(tiltInRadians) * current_Pn_params[i] * 50) // vertical
             let x_y = []
             if        (quarter == 1) {
                 let x_coord = 50 + sin_in_percent
@@ -163,8 +163,16 @@ app.get('/result', function (req, res, next) {
             x_y_array.push(x_y)
 
         }
+        // make a str polygon function
+        let polygonFormula = "clip-path: polygon("
+        for (let i = 0; i < x_y_array.length; i++) {
+            polygonFormula = polygonFormula + x_y_array[i][0] + "% " + x_y_array[i][1] + "%, "
+        }
+        polygonFormula = polygonFormula.slice(0, -2)
+        polygonFormula = polygonFormula + ")"
+
         LOST_sorted1[i].tiltArray = tilt_array
-        LOST_sorted1[i].xyArray = x_y_array
+        LOST_sorted1[i].polygon = polygonFormula
     }
     res.render('result', {title: 'Результати', systems:LOST_sorted1});
 });

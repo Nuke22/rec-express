@@ -1,7 +1,32 @@
 {% extends "layout.twig" %}
+{% block styleHead %}
+    <style>
+        .canvas {
+            background-color: darkgrey;
+            border-radius: 50%;
+            position: relative;
+            z-index: -100;
+            /*display: flex;*/
+        }
+        .stick {
+            width: 12rem;
+            height: 0.5rem;
+            background-color: black;
+            transform-origin: left;
+            position: absolute;
+            z-index: 0;
+            top: 50%;
+            left: 50%;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-
+{#
+    {{ system.xyArray[1] --depr}}
+<h1>{{ system.tiltArray }}</h1>
+<h3>{{ system.Pn_param }}</h3>
+#}
 <h1> Результат пошуку: </h1>
 
 <table>
@@ -9,12 +34,14 @@
         <tr>
             <td><h2>{{ system.title }}</h2></td>
             <td>
-                <div class="polygon"
-                     style ="clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);">
-
-
-                    {#360/total*i #}
+                <div class="canvas">
+                    <div class="polygon" style="{{ system.polygon }}">
+                    </div>
+                    {% for rotation in system.tiltArray %}
+                        <div class="stick" style="transform: rotate({{ rotation }}deg)"></div>
+                    {% endfor %}
                 </div>
+
             </td>
         </tr>
     {% endfor %}
