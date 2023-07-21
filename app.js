@@ -131,37 +131,29 @@ app.get('/result', function (req, res, next) {
 
         let tilt_array = []
         let x_y_array = []
+        let stickLength_array = []      // debug
+        let sin_cos_array = []
         for (let j = 0; j < current_Pn_params.length; j++){     // 1 parameter level
             let tilt = (360 / current_Pn_params.length) * j
-            tilt_array.push(tilt - 90)  // making it start from top
+            tilt_array.push(tilt + 90)  // making it start from top
             let quarter = Math.floor(tilt / 90) + 1
             let tiltInRadians = tilt * (Math.PI / 180);
-            let sin_in_percent = Math.round(Math.sin(tiltInRadians) * current_Pn_params[i] * 50) // horizontal
-            let cos_in_percent = Math.round(Math.cos(tiltInRadians) * current_Pn_params[i] * 50) // vertical
+            let stickLength = current_Pn_params[j] * 50
+            let sin_in_percent = Math.round(Math.sin(tiltInRadians) * stickLength * 100) / 100 // horizontal
+            let cos_in_percent = Math.round(Math.cos(tiltInRadians) * stickLength * 100) / 100 // vertical
+            let sin_i = Math.round(Math.sin(tiltInRadians) * 40 * 100) / 100// horizontal
+            let cos_i = Math.round(Math.cos(tiltInRadians) * 40 * 100) / 100// vertical
+            let sin_cos = []
+            sin_cos.push(sin_in_percent)
+            sin_cos.push(cos_in_percent)
+            sin_cos_array.push(sin_cos)
             let x_y = []
-            if        (quarter == 1) {
-                let x_coord = 50 + sin_in_percent
-                let y_coord = 50 - cos_in_percent
-                x_y.push(x_coord)
-                x_y.push(y_coord)
-            } else if (quarter == 2) {
-                let x_coord = 50 + sin_in_percent
-                let y_coord = 50 + cos_in_percent
-                x_y.push(x_coord)
-                x_y.push(y_coord)
-            } else if (quarter == 3) {
-                let x_coord = 50 - sin_in_percent
-                let y_coord = 50 + cos_in_percent
-                x_y.push(x_coord)
-                x_y.push(y_coord)
-            } else if (quarter == 4) {
-                let x_coord = 50 - sin_in_percent
-                let y_coord = 50 - cos_in_percent
-                x_y.push(x_coord)
-                x_y.push(y_coord)
-            }
+            stickLength_array.push(stickLength)
+            let x_coord = 50 + sin_in_percent
+            let y_coord = 50 + cos_in_percent
+            x_y.push(x_coord)
+            x_y.push(y_coord)
             x_y_array.push(x_y)
-
         }
         // make a str polygon function
         let polygonFormula = "clip-path: polygon("
@@ -557,12 +549,6 @@ app.post("/apply-resource", async (req, res) => {
             LOST_sorted[i]._doc.Pn_param = line
         }
 
-        // STEP - TRANSFIGURE Pn-MATRIX VALUES INTO THE CSS-READY VALUES
-        number_of_vertices = LOST_sorted.length
-        // name_of_each_vertex
-        for (let i = 0; i < LOST_sorted.length; i++){
-
-        }
         req.session.LOST_sorted = LOST_sorted
         res.redirect('/result')
     } catch (error) {
