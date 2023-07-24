@@ -70,6 +70,11 @@ const TypeOfResource = mongoose.model("TypeOfResource", {
     name: String
 },'TypeOfResource')
 
+const DataForEvaluation = mongoose.model("DataForEvaluation", {
+    name: String,
+    type: String
+})
+
 //TODO МiddleWare
 //Middleware для обробки JSON даних
 app.use(bodyParser.json());
@@ -91,6 +96,12 @@ const authenticateUser = (req, res, next) => {
         return res.status(401).send('<script>alert("Потрібна авторизація"); window.location.href = "/login";</script>');
     }
 };
+
+
+// TODO Сторінка BulkData-post
+app.get('/admin/panel/bulkData', authenticateUser, async (req, res) => {
+
+})
 
 // TODO Сторінка Адмін Панелі
 app.get('/admin/panel', authenticateUser, async (req, res) => {
