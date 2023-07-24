@@ -1,0 +1,34 @@
+{% extends '../layout.twig' %}
+{% block styleHead %}
+    <style>
+        form {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+        textarea {
+            width: 25%;
+            min-width: 15rem;
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+    <form action="/bulk-handler" method="post">
+        <label for="receiver">System names</label>
+        <textarea
+                rows="10"
+{#                cols="30"#}
+                placeholder="Insert here"
+                id="receiver" name="BulkData">
+        </textarea>
+        <p>Please insert systems <b>one by one</b> or separate systems names <b>with comma</b>.
+            Do not use <i>any</i> other symbols like dots, semicolons, etc. Example: <br>
+            WolframAlpha,<br>
+            ChatGPT,<br>
+            AlphaGo
+        </p>
+    </form>
+{% endblock %}

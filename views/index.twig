@@ -1,23 +1,21 @@
 {% extends 'layout.twig' %}
 
-{% block body %}
+{% block styleHead %}
     <style>
         body {
             background: rgba(13, 166, 217, 0.1);
-
         }
         .zoom-effect {
             transition: transform 0.3s;
-
-
         }
 
         .zoom-effect:hover {
             transform: scale(1.1);
-            /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-
         }
     </style>
+{% endblock %}
+
+{% block body %}
     <div class="container ">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <div class="col-md-3 mb-2 mb-md-0">

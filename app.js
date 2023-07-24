@@ -70,7 +70,7 @@ const TypeOfResource = mongoose.model("TypeOfResource", {
     name: String
 },'TypeOfResource')
 
-const DataForEvaluation = mongoose.model("DataForEvaluation", {
+const EvalCategory = mongoose.model("EvalCategory", {
     name: String,
     type: String
 })
@@ -99,10 +99,46 @@ const authenticateUser = (req, res, next) => {
 
 
 // TODO Сторінка BulkData-post
-app.get('/admin/panel/bulkData', authenticateUser, async (req, res) => {
+// functionality of the page - you add some coma separated values in the text field. Then we find if any of the
+//      input matches with an existing name in the DB (evaluated or not).
+//      If yes - dont add a new doc in the DB.
+//      If no  - add to the DB
+app.get('/admin/panel/bulkData', async (req, res) => {
+    try {
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+        res.render('Admin/bulk-data', {title: 'Панель завантаження нових систем'});
+    } catch (error) {
+        console.error('Error in bulkData:', error);
+        res.status(500).send('Помилка');
+    }
 })
 
+
+app.post("/bulk-handler", async (req, res) => {
+    try {
+        const existingCategoriesB = await Category.find({}, "title");
+        const newCategoriesB = await EvalCategory.find({}, "title");
+
+        // purgatory
+        let existingCategories = []
+        for (let i = 0; i < existingCategoriesB.length; i++){
+            existingCategories.push(existingCategoriesB[i].title)
+        }
+        let newCategories = []
+        for (let i = 0; i < newCategoriesB.length; i++){
+            newCategories.push(newCategoriesB[i].title)
+        }
+
+        // all possible titles are stored in omniCategories
+        let omniCategories = existingCategories.concat(newCategories)
+
+        res.redirect("/admin/panel/bulkData")
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Помилка. О ні, тільки не помилка. Що ж тепер робити... Та нічого не роби, життя матриця, всі помруть');
+    }
+})
 // TODO Сторінка Адмін Панелі
 app.get('/admin/panel', authenticateUser, async (req, res) => {
     try {
