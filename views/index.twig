@@ -24,10 +24,12 @@
                 </a>
             </div>
 
-            <div class="col-md-3 text-end">
+            <div class="col-md-3 text-end" style="width: 50%;">
+
                 {% if user %}
                     {% if user.role == "admin" %}
                         <a href="{{ path:('admin/panel') }}"><button type="button" class="btn btn-outline-primary me-2 ">Панель Адміністратора</button></a>
+                        <a href="{{ path:("/admin/panel/bulkData") }}"><button type="button" class="btn btn-outline-primary me-2 ">Додати на оцінку</button></a>
                         <a href="{{ path:('logout') }}"><button type="button" class="btn btn-outline-primary me-2 ">Вийти</button></a>
                     {% else %}
                         <a class="btn btn-primary" href="/logout">Вийти</a>

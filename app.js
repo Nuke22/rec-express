@@ -5,7 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongodb = require("mongodb");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -105,9 +105,10 @@ const authenticateUser = (req, res, next) => {
 //      If no  - add to the DB
 app.get('/admin/panel/bulkData', async (req, res) => {
     try {
+        const categories = await TypeOfResource.find();
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        res.render('Admin/bulk-data', {title: 'Панель завантаження нових систем'});
+        res.render('Admin/bulk-data', {title: 'Панель завантаження нових систем', categories: categories});
     } catch (error) {
         console.error('Error in bulkData:', error);
         res.status(500).send('Помилка');
@@ -130,7 +131,7 @@ app.post("/bulk-handler", async (req, res) => {
             newCategories.push(newCategoriesB[i].title)
         }
 
-        // all possible titles are stored in omniCategories
+        // all possible items (categories) are stored in omniCategories
         let omniCategories = existingCategories.concat(newCategories)
 
         res.redirect("/admin/panel/bulkData")
@@ -178,24 +179,19 @@ app.get('/result', function (req, res, next) {
 
         let tilt_array = []
         let x_y_array = []
-        let stickLength_array = []      // debug
         let sin_cos_array = []
         for (let j = 0; j < current_Pn_params.length; j++){     // 1 parameter level
             let tilt = (360 / current_Pn_params.length) * j
             tilt_array.push(tilt + 90)  // making it start from top
-            let quarter = Math.floor(tilt / 90) + 1
             let tiltInRadians = tilt * (Math.PI / 180);
             let stickLength = current_Pn_params[j] * 50
             let sin_in_percent = Math.round(Math.sin(tiltInRadians) * stickLength * 100) / 100 // horizontal
             let cos_in_percent = Math.round(Math.cos(tiltInRadians) * stickLength * 100) / 100 // vertical
-            let sin_i = Math.round(Math.sin(tiltInRadians) * 40 * 100) / 100// horizontal
-            let cos_i = Math.round(Math.cos(tiltInRadians) * 40 * 100) / 100// vertical
             let sin_cos = []
             sin_cos.push(sin_in_percent)
             sin_cos.push(cos_in_percent)
             sin_cos_array.push(sin_cos)
             let x_y = []
-            stickLength_array.push(stickLength)
             let x_coord = 50 + sin_in_percent
             let y_coord = 50 + cos_in_percent
             x_y.push(x_coord)
