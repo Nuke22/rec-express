@@ -8,9 +8,11 @@
             margin: 0 auto;
         }
         textarea {
-            width: 25%;
-            min-width: 15rem;
-            margin: 1rem auto;
+            min-width: 19rem;
+            margin: 1rem 0;
+        }
+        button {
+            margin-bottom: 1rem;
         }
     </style>
 {% endblock %}
@@ -30,22 +32,22 @@
                     </select>
                 </div>
             </fieldset>
-            <textarea rows="10" placeholder="Вставити імена систем через кому" id="receiver" name="BulkData"></textarea>
+            <textarea rows="10" placeholder="Вставити імена систем через кому" id="receiver" name="bulkData"></textarea>
             <button class="btn btn-primary zoom-effect" type="submit">Надіслати на перевірку</button>
 
             <p>Будь ласка, вставте системи <b>по одному</b> або розділіть назви систем <b>комами</b>.
-            Не використовуйте <i>жодні</i> інші символи, крапки, крапки з комою тощо. Приклад: <br>
+            Не використовуйте <i>жодні</i> інші символи, крапки, крапки з комою тощо. Приклад: <br><br>
             <i>WolframAlpha,</i><br>
             <i>ChatGPT</i>,<br>
             <i>AlphaGo</i>
             </p>
 
-            <p>Please insert systems <b>one by one</b> or separate systems names <b>with comma</b>.
-                Do not use <i>any</i> other symbols like dots, semicolons, etc. Example: <br>
-                <i>WolframAlpha,</i><br>
-                <i>ChatGPT</i>,<br>
-                <i>AlphaGo</i>
-            </p>
+{#            <p>Please insert systems <b>one by one</b> or separate systems names <b>with comma</b>.#}
+{#                Do not use <i>any</i> other symbols like dots, semicolons, etc. Example: <br>#}
+{#                <i>WolframAlpha,</i><br>#}
+{#                <i>ChatGPT</i>,<br>#}
+{#                <i>AlphaGo</i>#}
+{#            </p>#}
         </form>
     </div>
 {% endblock %}

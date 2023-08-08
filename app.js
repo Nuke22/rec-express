@@ -130,10 +130,10 @@ app.post("/bulk-handler", async (req, res) => {
         for (let i = 0; i < newCategoriesB.length; i++){
             newCategories.push(newCategoriesB[i].title)
         }
-
         // all possible items (categories) are stored in omniCategories
         let omniCategories = existingCategories.concat(newCategories)
 
+        const {bulkData, type_of_resource} = req.body;
         res.redirect("/admin/panel/bulkData")
     } catch (error) {
         console.error('Error fetching categories:', error);
