@@ -47,19 +47,21 @@ mongoose.connect('mongodb://localhost:27017/express', {useNewUrlParser: true, us
     });
 
 //Створення моделей
+const SystemData = mongoose.model("SystemData", {
+    systems_name: {type: String, default: ''},
+    params: [{
+        title: {type: String, default: ''},
+        rating: {type: Number, default: ''}
+    }]
+})
+
 const User = mongoose.model('User', {
     first_name: String,
     second_name: String,
     email: String,
     password: String,
     role: {type: String, default: 'user'},
-    personal_marks: [{
-            systems_name: {type: String, default: ''},
-            params: [{
-                title: {type: String, default: ''},
-                rating: {type: Number, default: ''}
-            }]
-        }]
+    personal_marks: [SystemData]
 }, 'Users');
 
 const Category = mongoose.model('Category', {
@@ -78,10 +80,6 @@ const TypeOfResource = mongoose.model("TypeOfResource", {
     name: String
 },'TypeOfResource')
 
-const EvalCategory = mongoose.model("EvalCategory", {
-    name: String,
-    type: String
-})
 
 //TODO МiddleWare
 //Middleware для обробки JSON даних
@@ -128,19 +126,12 @@ app.post("/bulk-handler", async (req, res) => {
     try {
         const {bulkData, type_of_resource} = req.body
         const existingCategoriesModel = await Category.find({"type": type_of_resource}, "title");  //debug this!!
-        const newCategoriesModel = await EvalCategory.find({"type": type_of_resource}, "title");
 
         // purgatory
         let existingCategories = []
         for (let i = 0; i < existingCategoriesModel.length; i++){
             existingCategories.push(existingCategoriesModel[i].title)
         }
-        let newCategories = []
-        for (let i = 0; i < newCategoriesModel.length; i++){
-            newCategories.push(newCategoriesModel[i].title)
-        }
-        // all possible items (categories) are stored in omniCategories
-        let omniCategories = existingCategories.concat(newCategories)
 
         //format new names
         let bulkDataNoHtml = bulkData.replace(/\n|\r/g, '');
@@ -155,7 +146,7 @@ app.post("/bulk-handler", async (req, res) => {
         let reportAsExisting = []
         let reportAsNew = []
         for (let i = 0; i < newNames.length; i++) {
-            if (omniCategories.includes(newNames[i])) {
+            if (existingCategories.includes(newNames[i])) {
                 reportAsExisting.push(newNames[i])
             } else {
                 reportAsNew.push(newNames[i])
