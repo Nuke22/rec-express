@@ -52,7 +52,14 @@ const User = mongoose.model('User', {
     second_name: String,
     email: String,
     password: String,
-    role: {type: String, default: 'user'}
+    role: {type: String, default: 'user'},
+    personal_marks: [{
+            systems_name: String,
+            params: [{
+                title: String,
+                rating: Number
+            }]
+        }]
 }, 'Users');
 
 const Category = mongoose.model('Category', {
@@ -60,7 +67,6 @@ const Category = mongoose.model('Category', {
     type: String,
     params: [
         {
-            index: String,
             title: String,
             rating: Number
         }]
@@ -118,22 +124,42 @@ app.get('/admin/panel/bulkData', async (req, res) => {
 
 app.post("/bulk-handler", async (req, res) => {
     try {
-        const existingCategoriesB = await Category.find({}, "title");
-        const newCategoriesB = await EvalCategory.find({}, "title");
+        const {bulkData, type_of_resource} = req.body
+        const existingCategoriesModel = await Category.find({"type": type_of_resource}, "title");  //debug this!!
+        const newCategoriesModel = await EvalCategory.find({"type": type_of_resource}, "title");
 
         // purgatory
         let existingCategories = []
-        for (let i = 0; i < existingCategoriesB.length; i++){
-            existingCategories.push(existingCategoriesB[i].title)
+        for (let i = 0; i < existingCategoriesModel.length; i++){
+            existingCategories.push(existingCategoriesModel[i].title)
         }
         let newCategories = []
-        for (let i = 0; i < newCategoriesB.length; i++){
-            newCategories.push(newCategoriesB[i].title)
+        for (let i = 0; i < newCategoriesModel.length; i++){
+            newCategories.push(newCategoriesModel[i].title)
         }
         // all possible items (categories) are stored in omniCategories
         let omniCategories = existingCategories.concat(newCategories)
 
-        const {bulkData, type_of_resource} = req.body;
+        //format new names
+        let bulkDataNoHtml = bulkData.replace(/\n|\r/g, '');
+        let bulkDataArray = bulkDataNoHtml.split(",")
+        let newNames = []
+        for (let i = 0; i < bulkDataArray.length; i++){
+            let result = bulkDataArray[i].trim()
+            newNames.push(result)
+        }
+
+        // separate new input from the existing one
+        let reportAsExisting = []
+        let reportAsNew = []
+        for (let i = 0; i < newNames.length; i++) {
+            if (omniCategories.includes(newNames[i])) {
+                reportAsExisting.push(newNames[i])
+            } else {
+                reportAsNew.push(newNames[i])
+            }
+        }
+
         res.redirect("/admin/panel/bulkData")
     } catch (error) {
         console.error('Error fetching categories:', error);
