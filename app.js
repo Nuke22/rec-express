@@ -251,7 +251,7 @@ app.get('/admin/panel/add', authenticateUser, async (req, res) => {
 app.post('/register/user', async (req, res) => {
     try {
         let {first_name, second_name, email, password} = req.body;
-        email = email.toLowerCase().replace(/\s/g, '');
+        email = email.toLowerCase();
         // Перевірка, чи користувач з таким ім'ям вже існує
         const existingUser = await User.findOne({email});
         if (existingUser) {
@@ -277,7 +277,7 @@ app.post('/register/user', async (req, res) => {
 app.post('/login/user', async (req, res) => {
     try {
         let {email, password} = req.body;
-        email = email.toLowerCase().replace(/\s/g, '');
+        email = email.toLowerCase();
         // Пошук користувача за email
         const user = await User.findOne({email});
         if (!user) {
