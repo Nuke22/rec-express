@@ -248,8 +248,8 @@ app.get('/admin/panel/add', authenticateUser, async (req, res) => {
 // Роутер для обробки реєстрації
 app.post('/register/user', async (req, res) => {
     try {
-        const {first_name, second_name, email, password} = req.body;
-
+        let {first_name, second_name, email, password} = req.body;
+        email = email.toLowerCase().replace(/\s/g, '');
         // Перевірка, чи користувач з таким ім'ям вже існує
         const existingUser = await User.findOne({email});
         if (existingUser) {
@@ -274,8 +274,8 @@ app.post('/register/user', async (req, res) => {
 // Роутер для обробки авторизації
 app.post('/login/user', async (req, res) => {
     try {
-        const {email, password} = req.body;
-
+        let {email, password} = req.body;
+        email = email.toLowerCase().replace(/\s/g, '');
         // Пошук користувача за email
         const user = await User.findOne({email});
         if (!user) {
