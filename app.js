@@ -54,10 +54,10 @@ const User = mongoose.model('User', {
     password: String,
     role: {type: String, default: 'user'},
     personal_marks: [{
-            systems_name: String,
+            systems_name: {type: String, default: ''},
             params: [{
-                title: String,
-                rating: Number
+                title: {type: String, default: ''},
+                rating: {type: Number, default: ''}
             }]
         }]
 }, 'Users');
@@ -65,6 +65,8 @@ const User = mongoose.model('User', {
 const Category = mongoose.model('Category', {
     title: String,
     type: String,
+    evaluated: {type: Boolean, default: false},
+    evaluatedBy: [String],      // user email as identifier
     params: [
         {
             title: String,
