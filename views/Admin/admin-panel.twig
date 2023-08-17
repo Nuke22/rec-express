@@ -69,7 +69,8 @@
         button {
             width: 100px;
         }
-        .home{
+
+        .home {
             margin-left: 15px;
         }
     </style>
@@ -86,6 +87,53 @@
         <div class="admin-panel-right">
             <div class="container">
                 <h2>Категорії</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Операції</th>
+                        {% for category in cat %}
+                            <th>
+                                <a href="/edit-category/{{ category._id }}">
+                                    <button class="btn btn-sm btn-outline-secondary">Оцінити</button>
+                                </a>
+                                <a href="/delete-category/{{ category._id }}">
+                                    <button class="btn btn-sm btn-outline-secondary">Видалити</button>
+                                </a>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>Назва</th>
+                        {% for category in cat %}
+                            <td>{{ category.title }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th>Тип</th>
+                        {% for category in cat %}
+                            <td>{{ category.type }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% for param in cat[0].params %}
+                        <tr>
+                            <th>{{ param.title }}</th>
+                            {% for category in cat %}
+                                {% for categoryParam in category.params %}
+                                    {% if categoryParam.title == param.title %}
+                                        <td>{{ categoryParam.rating }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {#            Таблиця  вже оцінених #}
+            <div class="container">
+                <h2>Оцінені Категорії</h2>
                 <table class="table">
                     <thead>
                     <tr>
@@ -129,9 +177,8 @@
                     {% endfor %}
                     </tbody>
                 </table>
-
-
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
