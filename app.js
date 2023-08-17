@@ -46,14 +46,7 @@ mongoose.connect('mongodb://localhost:27017/express', {useNewUrlParser: true, us
         console.error('Error connecting to MongoDB:', error);
     });
 
-//Створення моделей
-const SystemData = mongoose.model("SystemData", {
-    systems_name: {type: String, default: ''},
-    params: [{
-        title: {type: String, default: ''},
-        rating: {type: Number, default: ''}
-    }]
-})
+// Створення моделей
 
 const User = mongoose.model('User', {
     first_name: String,
@@ -61,7 +54,7 @@ const User = mongoose.model('User', {
     email: String,
     password: String,
     role: {type: String, default: 'user'},
-    personal_marks: [SystemData]
+    personal_marks: [] // insert directly !!!
 }, 'Users');
 
 const Category = mongoose.model('Category', {
