@@ -15,7 +15,7 @@
         }
         .stick {
             width: 12rem;
-            height: 0.5rem;
+            height: 0.8rem;
             background-color: black;
             transform-origin: left;
             position: absolute;
@@ -91,7 +91,9 @@
                         {% for rotation in system.tiltArray %}
                             {% set color_position = chosenCheck[loop.index0] %}
                             <div class="stick" style="transform: rotate({{ rotation }}deg);
-                                    background-color: {{ color_pallet[color_position] }};">
+                                    background-color: {{ color_pallet[color_position] }};
+                                    border: 0.15rem solid lightgray;
+                                    border-radius: 50% 10% 10% 50%">
                             </div>
                         {% endfor %}
                     </div>
