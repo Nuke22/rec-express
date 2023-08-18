@@ -42,6 +42,21 @@
             <i>ChatGPT</i>,<br>
             <i>AlphaGo</i>
             </p>
+            <div>
+                <i>Успішно додано:</i>
+                {% for Category in newCat %}
+                    <p style="color: green;  margin-bottom: 2px "> "{{ Category }}" </p>
+                {% endfor %}
+                <br>
+                <br>
+                <i>Уже існує:</i>
+                {% for Category in existCat %}
+                    <span style="color: red; margin-bottom: 2px">"{{ Category }}" </span>
+                {% endfor %}
+
+
+
+            </div>
 
 {#            <p>Please insert systems <b>one by one</b> or separate systems names <b>with comma</b>.#}
 {#                Do not use <i>any</i> other symbols like dots, semicolons, etc. Example: <br>#}
