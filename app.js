@@ -107,7 +107,16 @@ app.get('/admin/panel/bulkData', async (req, res) => {
         const categories = await TypeOfResource.find();
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        res.render('Admin/bulk-data', {title: 'Панель завантаження нових систем', categories: categories});
+        if (req.session.reportAsNew === undefined   )
+        {
+            req.session.reportAsNew = null
+        }
+        if (req.session.reportAsExisting === undefined)
+        {
+            req.session.reportAsExisting = null
+        }
+
+        res.render('Admin/bulk-data', {title: 'Панель завантаження нових систем', categories: categories, newCat: req.session.reportAsNew, existCat: req.session.reportAsExisting   });
     } catch (error) {
         console.error('Error in bulkData:', error);
         res.status(500).send('Помилка');
@@ -145,6 +154,10 @@ app.post("/bulk-handler", async (req, res) => {
                 reportAsNew.push(newNames[i])
             }
         }
+
+
+        req.session.reportAsExisting = reportAsExisting
+        req.session.reportAsNew = reportAsNew
 
         res.redirect("/admin/panel/bulkData")
     } catch (error) {
