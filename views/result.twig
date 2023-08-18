@@ -5,7 +5,7 @@
             background: rgba(13, 166, 217, 0.1);
         }
         .canvas {
-            background-color: lightgoldenrodyellow;
+            background-color: #e6e4e3;
             border-radius: 50%;
             position: relative;
             z-index: -100;
@@ -30,7 +30,7 @@
         }
         .sticky-block {
             position: fixed;
-            top: 15%;
+            top: 50%;
             right: 20px;
             transform: translateY(-50%);
             background-color: #f1f1f1;
@@ -57,18 +57,6 @@
             font-size: 14px;
             margin: 0;
         }
-        .legend-icon-blue {
-            background-color: blue;
-        }
-        .legend-icon-red {
-            background-color: red;
-        }
-        .legend-icon-green {
-            background-color: green;
-        }
-        .legend-icon-black {
-            background-color: black;
-        }
 
     </style>
 {% endblock %}
@@ -78,22 +66,19 @@
     <aside class="sticky-block">
         <h1 style="margin-bottom: 40px">Легенда діаграми</h1>
         <ul class="legend-list">
-            <li>
-                <div class="legend-icon legend-icon-blue"></div>
-                <p class="legend-label">Відповідає за цей покажчик</p>
-            </li>
-            <li>
-                <div class="legend-icon legend-icon-red"></div>
-                <p class="legend-label">Відповідає за цей покажчик</p>
-            </li>
-            <li>
-                <div class="legend-icon legend-icon-green"></div>
-                <p class="legend-label">Відповідає за цей покажчик</p>
-            </li>
-            <li>
-                <div class="legend-icon legend-icon-black"></div>
-                <p class="legend-label">Відповідає за цей покажчик</p>
-            </li>
+            {% set color_pallet = [
+                '#1f77b4', '#ff7f0e', '#2ca02c',
+                '#d62728', '#9467bd', '#8c564b',
+                '#e377c2', '#7f7f7f', '#bcbd22',
+                '#17becf'
+            ] %}
+            {% for vertex in name_of_each_vertex %}
+                {% set color_position = chosenCheck[loop.index0] %}
+                <li>
+                    <div class="legend-icon" style="background-color: {{ color_pallet[color_position] }}"></div>
+                    <p class="legend-label">{{ vertex }}</p>
+                </li>
+            {% endfor %}
         </ul>
     </aside>
     <table class="tab">
@@ -104,7 +89,10 @@
                     <div class="canvas">
                         <div class="polygon" style="{{ system.polygon }}"></div>
                         {% for rotation in system.tiltArray %}
-                            <div class="stick" style="transform: rotate({{ rotation }}deg)"></div>
+                            {% set color_position = chosenCheck[loop.index0] %}
+                            <div class="stick" style="transform: rotate({{ rotation }}deg);
+                                    background-color: {{ color_pallet[color_position] }};">
+                            </div>
                         {% endfor %}
                     </div>
                 </td>

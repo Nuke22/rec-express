@@ -221,7 +221,9 @@ app.get('/result', function (req, res, next) {
         LOST_sorted1[i].tiltArray = tilt_array
         LOST_sorted1[i].polygon = polygonFormula
     }
-    res.render('result', {title: 'Результати', systems:LOST_sorted1});
+    res.render('result', {title: 'Результати',
+        systems:LOST_sorted1, chosenCheck:req.session.chosenCheck,
+        name_of_each_vertex:req.session.name_of_each_vertex});
 });
 // TODO Сторінка Додавання категорій
 app.get('/admin/panel/add', authenticateUser, async (req, res) => {
@@ -459,7 +461,8 @@ app.post("/apply-resource", async (req, res) => {
             name_of_each_vertex[i] = chosenCheck[i].slice(0, -2)
             chosenCheck[i] = parseInt(chosenCheck[i].slice(-1))
         }
-
+        req.session.chosenCheck = chosenCheck
+        req.session.name_of_each_vertex = name_of_each_vertex
         const LOST = await Category.find({type: chosenType_of_resource});
 
         //working names
