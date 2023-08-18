@@ -43,12 +43,19 @@
             <i>AlphaGo</i>
             </p>
             <div>
-                {% for i in newCat %}
-                    <p style="color: green">{{ i }} успішно додано</p>
+                <i>Успішно додано:</i>
+                {% for Category in newCat %}
+                    <p style="color: green;  margin-bottom: 2px "> "{{ Category }}" </p>
                 {% endfor %}
-                {% for a in existCat %}
-                    <p style="color: red">{{ a }} уже існує</p>
+                <br>
+                <br>
+                <i>Уже існує:</i>
+                {% for Category in existCat %}
+                    <span style="color: red; margin-bottom: 2px">"{{ Category }}" </span>
                 {% endfor %}
+
+
+
             </div>
 
 {#            <p>Please insert systems <b>one by one</b> or separate systems names <b>with comma</b>.#}

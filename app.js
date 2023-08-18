@@ -106,6 +106,7 @@ app.get('/admin/panel/bulkData', async (req, res) => {
     try {
         const categories = await TypeOfResource.find();
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         if (req.session.reportAsNew === undefined   )
         {
             req.session.reportAsNew = null
@@ -153,6 +154,8 @@ app.post("/bulk-handler", async (req, res) => {
                 reportAsNew.push(newNames[i])
             }
         }
+
+
         req.session.reportAsExisting = reportAsExisting
         req.session.reportAsNew = reportAsNew
 
