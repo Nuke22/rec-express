@@ -60,13 +60,10 @@ const User = mongoose.model('User', {
 const Category = mongoose.model('Category', {
     title: String,
     type: String,
+    addedBy: String,
     evaluated: {type: Boolean, default: false},
     evaluatedBy: [String],      // user email as identifier
-    params: [
-        {
-            title: String,
-            rating: Number
-        }]
+    params: []
     }, 'Category');
 
 const TypeOfResource = mongoose.model("TypeOfResource", {
@@ -153,6 +150,22 @@ app.post("/bulk-handler", async (req, res) => {
             } else {
                 reportAsNew.push(newNames[i])
             }
+        }
+
+        // put new input to the DB
+        for (let i = 0; i < reportAsNew.length; i++){
+            let title = reportAsNew[i]
+            let author = req.session.user
+            console.log(author)
+            const newSystem = new Category({
+                title: title,
+                type: type_of_resource,
+                addedBy: author.email,
+                evaluated: false,
+                evaluatedBy: [],
+                params: []
+            })
+            await newSystem.save()
         }
 
 
@@ -332,53 +345,43 @@ app.post('/add', async (req, res) => {
             params: [
                 {
                     title: 'Інтерактивність',
-                    rating: rating1,
-                    index:1
+                    rating: rating1
                 },
                 {
                     title: 'Мультимедійність',
-                    rating: rating2,
-                    index:2
+                    rating: rating2
                 },
                 {
                     title: 'Можливість модифікації',
-                    rating: rating3,
-                    index:3
+                    rating: rating3
                 },
                 {
                     title: 'Кросплатформеність',
-                    rating: rating4,
-                    index: 4
+                    rating: rating4
                 },
                 {
                     title: 'Вільнопоширюваність',
-                    rating: rating5,
-                    index: 5
+                    rating: rating5
                 },
                 {
                     title: 'Архітектура',
-                    rating: rating6,
-                    index: 6
+                    rating: rating6
                 },
                 {
                     title: 'Функціональність',
-                    rating: rating7,
-                    index: 7,
+                    rating: rating7
                 },
                 {
                     title: 'Чисельність тем для опрацювання',
-                    rating: rating8,
-                    index: 8
+                    rating: rating8
                 },
                 {
                     title: 'Відповідність предметній області',
-                    rating: rating9,
-                    index: 9
+                    rating: rating9
                 },
                 {
                     title: 'Відповідність навчального змісту освітнім стандартам',
-                    rating: rating10,
-                    index: 10
+                    rating: rating10
                 },
             ]
 
