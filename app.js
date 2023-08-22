@@ -504,7 +504,7 @@ app.post("/apply-resource", async (req, res) => {
         req.session.name_of_each_vertex = name_of_each_vertex
         const LOST = await Category.find({type: chosenType_of_resource});
         if (chosenCheck.length < 3){
-            return res.status(500).send('Необхідно обрати більше 2 параметрів!');
+            return res.status(500).send('<script>alert("Необхідно обрати хоча б 2 критерія!"); window.history.back();</script>');
         }
         //working names
         // LOST = list of Systems That Fits the criteria
@@ -652,7 +652,7 @@ app.post("/apply-resource", async (req, res) => {
         res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
-        return res.status(500).send('Необхідно обрати більше 2 параметрів!');
+        return res.status(500).send('<script>alert("Необхідно обрати хоча б 2 критерія!"); window.history.back();</script>');
     }
 });
 
