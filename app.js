@@ -251,12 +251,12 @@ app.get('/result', function (req, res, next) {
         systems:LOST_sorted1, chosenCheck:req.session.chosenCheck,
         name_of_each_vertex:req.session.name_of_each_vertex});
 });
-// TODO Сторінка Додавання категорій
-app.get('/admin/panel/add', authenticateUser, async (req, res) => {
-    const listOfSystems = await TypeOfResource.find({})
-    console.log(listOfSystems)
-    res.render('Admin/add-category', { title: 'Додати категорію', categories: listOfSystems });
-});
+// TODO Сторінка Додавання категорій - DEPRECATED!!
+// app.get('/admin/panel/add', authenticateUser, async (req, res) => {
+//     const listOfSystems = await TypeOfResource.find({})
+//     console.log(listOfSystems)
+//     res.render('Admin/add-category', { title: 'Додати категорію', categories: listOfSystems });
+// });
 
 // TODO  Обробник форми реєстрації
 // Роутер для обробки реєстрації
@@ -327,73 +327,73 @@ app.get('/logout', (req, res) => {
     });
 });
 
-// TODO Обробник форми Додавання категорій
-app.post('/add', async (req, res) => {
-    try {
-        let {title,type,rating1,rating2,rating3,rating4,rating5,rating6,rating7,rating8,rating9,rating10} = req.body;
-
-        // Перевірка, чи категорія з таким ім'ям вже існує
-        const existingCategory = await User.findOne({title});
-        if (existingCategory) {
-            return res.status(409).send('<script>alert("Дана Категорія уже зареєстрована в системі"); window.history.back();</script>');
-        }
-
-        // Створення нової категорії
-        const newCategory = new Category({
-            title,
-            type,
-            params: [
-                {
-                    title: 'Інтерактивність',
-                    rating: rating1
-                },
-                {
-                    title: 'Мультимедійність',
-                    rating: rating2
-                },
-                {
-                    title: 'Можливість модифікації',
-                    rating: rating3
-                },
-                {
-                    title: 'Кросплатформеність',
-                    rating: rating4
-                },
-                {
-                    title: 'Вільнопоширюваність',
-                    rating: rating5
-                },
-                {
-                    title: 'Архітектура',
-                    rating: rating6
-                },
-                {
-                    title: 'Функціональність',
-                    rating: rating7
-                },
-                {
-                    title: 'Чисельність тем для опрацювання',
-                    rating: rating8
-                },
-                {
-                    title: 'Відповідність предметній області',
-                    rating: rating9
-                },
-                {
-                    title: 'Відповідність навчального змісту освітнім стандартам',
-                    rating: rating10
-                },
-            ]
-
-        });
-        await newCategory.save();
-        return res.send('<script>alert("Додавання пройшло успішно"); window.location.href = "/admin/panel";</script>');
-
-    } catch (error) {
-        console.error('Error during adding:', error);
-        return res.send('<script>alert("Виникла помилка під час додавання"); window.history.back();</script>');
-    }
-});
+// TODO Обробник форми Додавання категорій - DEPRECATED
+// app.post('/add', async (req, res) => {
+//     try {
+//         let {title,type,rating1,rating2,rating3,rating4,rating5,rating6,rating7,rating8,rating9,rating10} = req.body;
+//
+//         // Перевірка, чи категорія з таким ім'ям вже існує
+//         const existingCategory = await User.findOne({title});
+//         if (existingCategory) {
+//             return res.status(409).send('<script>alert("Дана Категорія уже зареєстрована в системі"); window.history.back();</script>');
+//         }
+//
+//         // Створення нової категорії
+//         const newCategory = new Category({
+//             title,
+//             type,
+//             params: [
+//                 {
+//                     title: 'Інтерактивність',
+//                     rating: rating1
+//                 },
+//                 {
+//                     title: 'Мультимедійність',
+//                     rating: rating2
+//                 },
+//                 {
+//                     title: 'Можливість модифікації',
+//                     rating: rating3
+//                 },
+//                 {
+//                     title: 'Кросплатформеність',
+//                     rating: rating4
+//                 },
+//                 {
+//                     title: 'Вільнопоширюваність',
+//                     rating: rating5
+//                 },
+//                 {
+//                     title: 'Архітектура',
+//                     rating: rating6
+//                 },
+//                 {
+//                     title: 'Функціональність',
+//                     rating: rating7
+//                 },
+//                 {
+//                     title: 'Чисельність тем для опрацювання',
+//                     rating: rating8
+//                 },
+//                 {
+//                     title: 'Відповідність предметній області',
+//                     rating: rating9
+//                 },
+//                 {
+//                     title: 'Відповідність навчального змісту освітнім стандартам',
+//                     rating: rating10
+//                 },
+//             ]
+//
+//         });
+//         await newCategory.save();
+//         return res.send('<script>alert("Додавання пройшло успішно"); window.location.href = "/admin/panel";</script>');
+//
+//     } catch (error) {
+//         console.error('Error during adding:', error);
+//         return res.send('<script>alert("Виникла помилка під час додавання"); window.history.back();</script>');
+//     }
+// });
 
 // TODO Обробник видалення категорії
 app.get('/delete-category/:id', authenticateUser, async (req, res) => {
@@ -627,7 +627,7 @@ app.post("/apply-resource", async (req, res) => {
         res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
-        return res.status(500).send('Необхідно посатвити галочку хоча б біля 1 параметра!');
+        return res.status(500).send('Unknown error');
     }
 });
 
