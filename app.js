@@ -494,8 +494,21 @@ app.get('/edit-category/:id', authenticateUser, async (req, res) => {
 app.post('/edit-category/:id', authenticateUser, async (req, res) => {
     try {
         const categoryId = req.params.id;
-        const {title, type} = req.body;
         let author = req.session.user.email
+        const {
+            title,
+            type,
+            filter1,
+            filter2,
+            filter3,
+            filter4,
+            filter5,
+            filter6,
+            filter7,
+            filter8,
+            filter9,
+            filter10
+        } = req.body;
 
         // Оновлення назви та типу категорії
         await Category.findByIdAndUpdate(categoryId, {
@@ -503,7 +516,51 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
             type: type,
             evaluated: true,
             $push: {evaluatedBy: author}, // possible break point
-
+            $push: {userMarks: {
+                    author: author,
+                    marks: [
+                        {
+                            title: 'Інтерактивність',
+                            rating: filter1
+                        },
+                        {
+                            title: 'Мультимедійність',
+                            rating: filter2
+                        },
+                        {
+                            title: 'Можливість модифікації',
+                            rating: filter3
+                        },
+                        {
+                            title: 'Кросплатформеність',
+                            rating: filter4
+                        },
+                        {
+                            title: 'Вільнопоширюваність',
+                            rating: filter5
+                        },
+                        {
+                            title: 'Архітектура',
+                            rating: filter6
+                        },
+                        {
+                            title: 'Функціональність',
+                            rating: filter7
+                        },
+                        {
+                            title: 'Чисельність тем для опрацювання',
+                            rating: filter8
+                        },
+                        {
+                            title: 'Відповідність предметній області',
+                            rating: filter9
+                        },
+                        {
+                            title: 'Відповідність навчального змісту освітнім стандартам',
+                            rating: filter10
+                        }]
+                }
+                }
         });
 
         // Оновлення параметрів категорії
