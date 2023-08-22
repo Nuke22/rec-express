@@ -86,12 +86,12 @@
         </div>
         <div class="admin-panel-right">
             <div class="container">
-                <h2>Категорії</h2>
+                <h2>Всі оцінені категорії</h2>
                 <table class="table">
                     <thead>
                     <tr>
                         <th>Операції</th>
-                        {% for category in cat %}
+                        {% for category in evalCat %}
                             <th>
                                 <a href="/edit-category/{{ category._id }}">
                                     <button class="btn btn-sm btn-outline-secondary">Оцінити</button>
@@ -106,20 +106,20 @@
                     <tbody>
                     <tr>
                         <th>Назва</th>
-                        {% for category in cat %}
+                        {% for category in evalCat %}
                             <td>{{ category.title }}</td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th>Тип</th>
-                        {% for category in cat %}
+                        {% for category in evalCat %}
                             <td>{{ category.type }}</td>
                         {% endfor %}
                     </tr>
-                    {% for param in cat[0].params %}
+                    {% for param in evalCat[0].params %}
                         <tr>
                             <th>{{ param.title }}</th>
-                            {% for category in cat %}
+                            {% for category in evalCat %}
                                 {% for categoryParam in category.params %}
                                     {% if categoryParam.title == param.title %}
                                         <td>{{ categoryParam.rating }}</td>
@@ -133,12 +133,12 @@
             </div>
             {#            Таблиця  вже оцінених #}
             <div class="container">
-                <h2>Оцінені Категорії</h2>
+                <h2>Категорії які були оцінені вами</h2>
                 <table class="table">
                     <thead>
                     <tr>
                         <th>Операції</th>
-                        {% for category in cat %}
+                        {% for category in userEvalSystem %}
                             <th>
                                 <a href="/edit-category/{{ category._id }}">
                                     <button class="btn btn-sm btn-outline-secondary">Змінити</button>
@@ -153,20 +153,67 @@
                     <tbody>
                     <tr>
                         <th>Назва</th>
-                        {% for category in cat %}
+                        {% for category in userEvalSystem %}
                             <td>{{ category.title }}</td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th>Тип</th>
-                        {% for category in cat %}
+                        {% for category in userEvalSystem %}
                             <td>{{ category.type }}</td>
                         {% endfor %}
                     </tr>
-                    {% for param in cat[0].params %}
+                    {% for param in userEvalSystem[0].params %}
                         <tr>
                             <th>{{ param.title }}</th>
-                            {% for category in cat %}
+                            {% for category in userEvalSystem %}
+                                {% for categoryParam in category.params %}
+                                    {% if categoryParam.title == param.title %}
+                                        <td>{{ categoryParam.rating }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+{#            Таблиця не оцінених#}
+            <div class="container">
+                <h2>Не оцінені категорії</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Операції</th>
+                        {% for category in notEvaledSystem %}
+                            <th>
+                                <a href="/edit-category/{{ category._id }}">
+                                    <button class="btn btn-sm btn-outline-secondary">Змінити</button>
+                                </a>
+                                <a href="/delete-category/{{ category._id }}">
+                                    <button class="btn btn-sm btn-outline-secondary">Видалити</button>
+                                </a>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>Назва</th>
+                        {% for category in notEvaledSystem %}
+                            <td>{{ category.title }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th>Тип</th>
+                        {% for category in notEvaledSystem %}
+                            <td>{{ category.type }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% for param in notEvaledSystem[0].params %}
+                        <tr>
+                            <th>{{ param.title }}</th>
+                            {% for category in notEvaledSystem %}
                                 {% for categoryParam in category.params %}
                                     {% if categoryParam.title == param.title %}
                                         <td>{{ categoryParam.rating }}</td>
