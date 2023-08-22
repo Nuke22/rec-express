@@ -223,9 +223,9 @@ app.post("/bulk-handler", async (req, res) => {
 // TODO Сторінка Адмін Панелі
 app.get('/admin/panel', authenticateUser, async (req, res) => {
     try {
-        const userEmail = req.session.user.email
+        const author = req.session.user.email
         const evalSystem = await Category.find({evaluated: true});
-        const partEvalSystem = await Category.find({evaluatedBy: userEmail})
+        const partEvalSystem = await Category.find({evaluatedBy: author})
         const notEvalSystem = await Category.find({evaluated: false})
         res.render('Admin/admin-panel', {
             title: 'Панель Адміністратора', evalCat: evalSystem,
@@ -377,86 +377,6 @@ app.get('/logout', (req, res) => {
     });
 });
 
-// TODO Обробник форми Додавання категорій
-// app.post('/add', async (req, res) => {
-//     try {
-//         let {
-//             title,
-//             type,
-//             rating1,
-//             rating2,
-//             rating3,
-//             rating4,
-//             rating5,
-//             rating6,
-//             rating7,
-//             rating8,
-//             rating9,
-//             rating10
-//         } = req.body;
-//
-//         // Перевірка, чи категорія з таким ім'ям вже існує
-//         const existingCategory = await User.findOne({title});
-//         if (existingCategory) {
-//             return res.status(409).send('<script>alert("Дана Категорія уже зареєстрована в системі"); window.history.back();</script>');
-//         }
-//
-//         // Створення нової категорії
-//         const newCategory = new Category({
-//             title,
-//             type,
-//             params: [
-//                 {
-//                     title: 'Інтерактивність',
-//                     rating: rating1
-//                 },
-//                 {
-//                     title: 'Мультимедійність',
-//                     rating: rating2
-//                 },
-//                 {
-//                     title: 'Можливість модифікації',
-//                     rating: rating3
-//                 },
-//                 {
-//                     title: 'Кросплатформеність',
-//                     rating: rating4
-//                 },
-//                 {
-//                     title: 'Вільнопоширюваність',
-//                     rating: rating5
-//                 },
-//                 {
-//                     title: 'Архітектура',
-//                     rating: rating6
-//                 },
-//                 {
-//                     title: 'Функціональність',
-//                     rating: rating7
-//                 },
-//                 {
-//                     title: 'Чисельність тем для опрацювання',
-//                     rating: rating8
-//                 },
-//                 {
-//                     title: 'Відповідність предметній області',
-//                     rating: rating9
-//                 },
-//                 {
-//                     title: 'Відповідність навчального змісту освітнім стандартам',
-//                     rating: rating10
-//                 },
-//             ]
-//
-//         });
-//         await newCategory.save();
-//         return res.send('<script>alert("Додавання пройшло успішно"); window.location.href = "/admin/panel";</script>');
-//
-//     } catch (error) {
-//         console.error('Error during adding:', error);
-//         return res.send('<script>alert("Виникла помилка під час додавання"); window.history.back();</script>');
-//     }
-// });
 
 // TODO Обробник видалення категорії
 app.get('/delete-category/:id', authenticateUser, async (req, res) => {
@@ -515,8 +435,9 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
             title: title,
             type: type,
             evaluated: true,
-            $push: {evaluatedBy: author}, // possible break point
-            $push: {userMarks: {
+            $push: {
+                evaluatedBy: author,
+                userMarks: {
                     author: author,
                     marks: [
                         {
@@ -563,16 +484,6 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
                 }
         });
 
-        // Оновлення параметрів категорії
-        // const paramKeys = Object.keys(req.body).filter(key => key.startsWith('filter'));
-        // for (const key of paramKeys) {
-        //     const index = key.replace('filter', '');
-        //     const rating = req.body[key];
-        //     await Category.findOneAndUpdate(
-        //         {_id: categoryId, 'params.index': index},
-        //         {$set: {'params.$.rating': rating}}
-        //     );
-        // }
 
         return res.send('<script>alert("Категорія успішно оновлена"); window.location.href = "/admin/panel";</script>');
     } catch (error) {
