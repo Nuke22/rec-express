@@ -54,7 +54,6 @@ const User = mongoose.model('User', {
     email: String,
     password: String,
     role: {type: String, default: 'user'},
-    personal_marks: [] // insert directly !!!
 }, 'Users');
 
 const Category = mongoose.model('Category', {
@@ -63,12 +62,13 @@ const Category = mongoose.model('Category', {
     addedBy: String,
     evaluated: {type: Boolean, default: false},
     evaluatedBy: [String],      // user email as identifier
-    params: []
-    }, 'Category');
+    params: [],
+    userMarks: []
+}, 'Category');
 
 const TypeOfResource = mongoose.model("TypeOfResource", {
     name: String
-},'TypeOfResource')
+}, 'TypeOfResource')
 
 
 //TODO МiddleWare
@@ -102,18 +102,19 @@ const authenticateUser = (req, res, next) => {
 app.get('/admin/panel/bulkData', authenticateUser, async (req, res) => {
     try {
         const categories = await TypeOfResource.find();
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        if (req.session.reportAsNew === undefined   )
-        {
+        if (req.session.reportAsNew === undefined) {
             req.session.reportAsNew = null
         }
-        if (req.session.reportAsExisting === undefined)
-        {
+        if (req.session.reportAsExisting === undefined) {
             req.session.reportAsExisting = null
         }
 
-        res.render('Admin/bulk-data', {title: 'Панель завантаження нових систем', categories: categories, newCat: req.session.reportAsNew, existCat: req.session.reportAsExisting   });
+        res.render('Admin/bulk-data', {
+            title: 'Панель завантаження нових систем',
+            categories: categories,
+            newCat: req.session.reportAsNew,
+            existCat: req.session.reportAsExisting
+        });
     } catch (error) {
         console.error('Error in bulkData:', error);
         res.status(500).send('Помилка');
@@ -128,7 +129,7 @@ app.post("/bulk-handler", async (req, res) => {
 
         // purgatory
         let existingCategories = []
-        for (let i = 0; i < existingCategoriesModel.length; i++){
+        for (let i = 0; i < existingCategoriesModel.length; i++) {
             existingCategories.push(existingCategoriesModel[i].title)
         }
 
@@ -136,7 +137,7 @@ app.post("/bulk-handler", async (req, res) => {
         let bulkDataNoHtml = bulkData.replace(/\n|\r/g, '');
         let bulkDataArray = bulkDataNoHtml.split(",")
         let newNames = []
-        for (let i = 0; i < bulkDataArray.length; i++){
+        for (let i = 0; i < bulkDataArray.length; i++) {
             let result = bulkDataArray[i].trim()
             newNames.push(result)
         }
@@ -153,17 +154,58 @@ app.post("/bulk-handler", async (req, res) => {
         }
 
         // put new input to the DB
-        for (let i = 0; i < reportAsNew.length; i++){
+        for (let i = 0; i < reportAsNew.length; i++) {
             let title = reportAsNew[i]
-            let author = req.session.user
+            let author = req.session.user.email
             console.log(author)
             const newSystem = new Category({
                 title: title,
                 type: type_of_resource,
-                addedBy: author.email,
+                addedBy: author,
                 evaluated: false,
                 evaluatedBy: [],
-                params: []
+                params: [
+                    {
+                        title: 'Інтерактивність',
+                        rating: 0
+                    },
+                    {
+                        title: 'Мультимедійність',
+                        rating: 0
+                    },
+                    {
+                        title: 'Можливість модифікації',
+                        rating: 0
+                    },
+                    {
+                        title: 'Кросплатформеність',
+                        rating: 0
+                    },
+                    {
+                        title: 'Вільнопоширюваність',
+                        rating: 0
+                    },
+                    {
+                        title: 'Архітектура',
+                        rating: 0
+                    },
+                    {
+                        title: 'Функціональність',
+                        rating: 0
+                    },
+                    {
+                        title: 'Чисельність тем для опрацювання',
+                        rating: 0
+                    },
+                    {
+                        title: 'Відповідність предметній області',
+                        rating: 0
+                    },
+                    {
+                        title: 'Відповідність навчального змісту освітнім стандартам',
+                        rating: 0
+                    }
+                ]
             })
             await newSystem.save()
         }
@@ -181,8 +223,14 @@ app.post("/bulk-handler", async (req, res) => {
 // TODO Сторінка Адмін Панелі
 app.get('/admin/panel', authenticateUser, async (req, res) => {
     try {
-        const categories = await Category.find();
-        res.render('Admin/admin-panel', {title: 'Панель Адміністратора', cat: categories});
+        const userEmail = req.session.user.email
+        const evalSystem = await Category.find({evaluated: true});
+        const partEvalSystem = await Category.find({evaluatedBy: userEmail})
+        const notEvalSystem = await Category.find({evaluated: false})
+        res.render('Admin/admin-panel', {
+            title: 'Панель Адміністратора', evalCat: evalSystem,
+            userEvalSystem: partEvalSystem, notEvaledSystem:notEvalSystem
+        });
     } catch (error) {
         console.error('Error fetching categories:', error);
         res.status(500).send('Помилка під час отримання категорій');
@@ -218,7 +266,7 @@ app.get('/result', function (req, res, next) {
         let tilt_array = []
         let x_y_array = []
         let sin_cos_array = []
-        for (let j = 0; j < current_Pn_params.length; j++){     // 1 parameter level
+        for (let j = 0; j < current_Pn_params.length; j++) {     // 1 parameter level
             let tilt = (360 / current_Pn_params.length) * j
             tilt_array.push(tilt + 90)  // making it start from top
             let tiltInRadians = tilt * (Math.PI / 180);
@@ -247,15 +295,17 @@ app.get('/result', function (req, res, next) {
         LOST_sorted1[i].tiltArray = tilt_array
         LOST_sorted1[i].polygon = polygonFormula
     }
-    res.render('result', {title: 'Результати',
-        systems:LOST_sorted1, chosenCheck:req.session.chosenCheck,
-        name_of_each_vertex:req.session.name_of_each_vertex});
+    res.render('result', {
+        title: 'Результати',
+        systems: LOST_sorted1, chosenCheck: req.session.chosenCheck,
+        name_of_each_vertex: req.session.name_of_each_vertex
+    });
 });
-// TODO Сторінка Додавання категорій - DEPRECATED!!
+// TODO Сторінка Додавання категорій
 // app.get('/admin/panel/add', authenticateUser, async (req, res) => {
 //     const listOfSystems = await TypeOfResource.find({})
 //     console.log(listOfSystems)
-//     res.render('Admin/add-category', { title: 'Додати категорію', categories: listOfSystems });
+//     res.render('Admin/add-category', {title: 'Додати категорію', categories: listOfSystems});
 // });
 
 // TODO  Обробник форми реєстрації
@@ -327,10 +377,23 @@ app.get('/logout', (req, res) => {
     });
 });
 
-// TODO Обробник форми Додавання категорій - DEPRECATED
+// TODO Обробник форми Додавання категорій
 // app.post('/add', async (req, res) => {
 //     try {
-//         let {title,type,rating1,rating2,rating3,rating4,rating5,rating6,rating7,rating8,rating9,rating10} = req.body;
+//         let {
+//             title,
+//             type,
+//             rating1,
+//             rating2,
+//             rating3,
+//             rating4,
+//             rating5,
+//             rating6,
+//             rating7,
+//             rating8,
+//             rating9,
+//             rating10
+//         } = req.body;
 //
 //         // Перевірка, чи категорія з таким ім'ям вже існує
 //         const existingCategory = await User.findOne({title});
@@ -420,7 +483,7 @@ app.get('/edit-category/:id', authenticateUser, async (req, res) => {
         const selectors = await TypeOfResource.find();
 
         // Передаємо дані категорії до шаблону для відображення у формі
-        return res.render('Admin/edit-category.twig', { category, selectors });
+        return res.render('Admin/edit-category.twig', {category, selectors});
     } catch (error) {
         console.error('Error during category editing:', error);
         return res.send('<script>alert("Виникла помилка під час редагування категорії"); window.history.back();</script>');
@@ -431,21 +494,28 @@ app.get('/edit-category/:id', authenticateUser, async (req, res) => {
 app.post('/edit-category/:id', authenticateUser, async (req, res) => {
     try {
         const categoryId = req.params.id;
-        const { title, type } = req.body;
+        const {title, type} = req.body;
+        let author = req.session.user.email
 
         // Оновлення назви та типу категорії
-        await Category.findByIdAndUpdate(categoryId, { title, type });
+        await Category.findByIdAndUpdate(categoryId, {
+            title: title,
+            type: type,
+            evaluated: true,
+            $push: {evaluatedBy: author}, // possible break point
+
+        });
 
         // Оновлення параметрів категорії
-        const paramKeys = Object.keys(req.body).filter(key => key.startsWith('filter'));
-        for (const key of paramKeys) {
-            const index = key.replace('filter', '');
-            const rating = req.body[key];
-            await Category.findOneAndUpdate(
-                { _id: categoryId, 'params.index': index },
-                { $set: { 'params.$.rating': rating } }
-            );
-        }
+        // const paramKeys = Object.keys(req.body).filter(key => key.startsWith('filter'));
+        // for (const key of paramKeys) {
+        //     const index = key.replace('filter', '');
+        //     const rating = req.body[key];
+        //     await Category.findOneAndUpdate(
+        //         {_id: categoryId, 'params.index': index},
+        //         {$set: {'params.$.rating': rating}}
+        //     );
+        // }
 
         return res.send('<script>alert("Категорія успішно оновлена"); window.location.href = "/admin/panel";</script>');
     } catch (error) {
@@ -453,7 +523,6 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
         return res.send('<script>alert("Виникла помилка під час оновлення категорії"); window.history.back();</script>');
     }
 });
-
 
 
 // TODO Обробник Типу категорій навчальних ресурсів
@@ -467,7 +536,7 @@ app.post("/apply-resource", async (req, res) => {
         let chosenCheck = bulkData.check
 
         //put numbers only into chosenImportance
-        for ( let i = 0; i < chosenImportance.length; i++) {
+        for (let i = 0; i < chosenImportance.length; i++) {
             chosenImportance[i] = parseInt(chosenImportance[i])
         }
 
@@ -494,7 +563,7 @@ app.post("/apply-resource", async (req, res) => {
             let matrix = []
             for (let i = 0; i < LOST.length; i++) {
                 let line = []
-                for (let h = 0; h < LOST.length; h++){
+                for (let h = 0; h < LOST.length; h++) {
                     let result
                     let h_rating = LOST[h].params[AGn].rating
                     let i_rating = LOST[i].params[AGn].rating
@@ -503,7 +572,7 @@ app.post("/apply-resource", async (req, res) => {
                     } else if (i_rating > h_rating) {
                         result = i_rating - h_rating
                     } else {
-                        result = 1/(h_rating - i_rating)
+                        result = 1 / (h_rating - i_rating)
                     }
                     line.push(result)
                 }
@@ -525,10 +594,10 @@ app.post("/apply-resource", async (req, res) => {
             let Gn_line = []
             for (let i = 0; i < LOST.length; i++) {
                 let result = 0
-                for(let h = 0; h < LOST.length; h++){
+                for (let h = 0; h < LOST.length; h++) {
                     result += matrix3d_forAGn_filtered[Gn][h][i]
                 }
-                let inverted_result = 1/result
+                let inverted_result = 1 / result
                 Gn_line.push(inverted_result)
             }
             Gn_matrix.push(Gn_line)
@@ -545,14 +614,14 @@ app.post("/apply-resource", async (req, res) => {
         let weight_matrix = []
         for (let i = 0; i < chosenCheck.length; i++) {
             let line = []
-            for (let h = 0; h < chosenCheck.length; h++){
+            for (let h = 0; h < chosenCheck.length; h++) {
                 let result
                 if (chosenImportance_filtered[i] === chosenImportance_filtered[h]) {
                     result = 1
                 } else if (chosenImportance_filtered[i] > chosenImportance_filtered[h]) {
                     result = chosenImportance_filtered[i] - chosenImportance_filtered[h]
                 } else {
-                    result = 1/(chosenImportance_filtered[h] - chosenImportance_filtered[i])
+                    result = 1 / (chosenImportance_filtered[h] - chosenImportance_filtered[i])
                 }
                 line.push(result)
             }
@@ -563,19 +632,19 @@ app.post("/apply-resource", async (req, res) => {
         let power_coefficient_line = []
         for (let i = 0; i < chosenCheck.length; i++) {
             let power_coefficient_value = 0
-            for(let h = 0; h < chosenCheck.length; h++){
+            for (let h = 0; h < chosenCheck.length; h++) {
                 power_coefficient_value += weight_matrix[h][i]
             }
-            let inverted_result = 1/power_coefficient_value
+            let inverted_result = 1 / power_coefficient_value
             power_coefficient_line.push(inverted_result)
         }
         console.log(power_coefficient_line)
 
         //STEP - APPLY POWERS TO Gn
         let Gn_matrix_with_powers = []
-        for (let h = 0; h < Gn_matrix.length; h++){
+        for (let h = 0; h < Gn_matrix.length; h++) {
             let Gn_line_with_powers = []
-            for (let i = 0; i < Gn_matrix[0].length; i++){
+            for (let i = 0; i < Gn_matrix[0].length; i++) {
                 let exponentiation_value = Gn_matrix[h][i] ** power_coefficient_line[h]
                 Gn_line_with_powers.push(exponentiation_value)
             }
@@ -595,7 +664,7 @@ app.post("/apply-resource", async (req, res) => {
 
         // STEP - FIND MINIMUM FOR Pn => create D_line
         let D_line = []
-        for ( let h = 0; h < Pn_matrix.length; h++) {
+        for (let h = 0; h < Pn_matrix.length; h++) {
             let result = Math.min(...Pn_matrix[h])
             D_line.push(result)
         }
@@ -604,7 +673,7 @@ app.post("/apply-resource", async (req, res) => {
         let D_line_sorted = [...D_line]
 
         let LOST_sorted = []
-        D_line_sorted.sort((a, b) => b -a)
+        D_line_sorted.sort((a, b) => b - a)
         let winners_index = []
         for (let i = 0; i < D_line.length; i++) {
             const index = D_line.indexOf(D_line_sorted[i])
@@ -627,11 +696,9 @@ app.post("/apply-resource", async (req, res) => {
         res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
-        return res.status(500).send('Unknown error');
+        return res.status(500).send('Необхідно посатвити галочку хоча б біля 1 параметра!');
     }
 });
-
-
 
 
 // catch 404 and forward to error handler
