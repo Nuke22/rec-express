@@ -99,7 +99,7 @@ const authenticateUser = (req, res, next) => {
 //      input matches with an existing name in the DB (evaluated or not).
 //      If yes - dont add a new doc in the DB.
 //      If no  - add to the DB
-app.get('/admin/panel/bulkData', async (req, res) => {
+app.get('/admin/panel/bulkData', authenticateUser, async (req, res) => {
     try {
         const categories = await TypeOfResource.find();
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
