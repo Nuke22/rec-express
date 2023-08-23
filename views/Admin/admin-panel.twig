@@ -164,18 +164,19 @@
                             <td>{{ category.type }}</td>
                         {% endfor %}
                     </tr>
-                    {% for category in userEvalSystem %}
-                        {% for params in category.params %}
-                            <tr>
-                            <th>{{ params.title }}</th>
-                            {% for user in category.userMarks %}
-                                {% for marks in user.marks %}
-                                        <th>{{ marks.title }}</th>
-                                {% endfor %}
-                            {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    {% endfor %}
+{#                    Зробити #}
+{#                    {% for category in userEvalSystem %}#}
+{#                        {% for params in category.params %}#}
+{#                            <tr>#}
+{#                            <th>{{ params.title }}</th>#}
+{#                            {% for user in category.userMarks %}#}
+{#                                {% for marks in user.marks %}#}
+{#                                        <th>{{ marks.title }}</th>#}
+{#                                {% endfor %}#}
+{#                            {% endfor %}#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                    {% endfor %}#}
                     </tbody>
                 </table>
             </div>
