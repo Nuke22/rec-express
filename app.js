@@ -229,7 +229,7 @@ app.get('/admin/panel', authenticateUser, async (req, res) => {
         const notEvalSystem = await Category.find({evaluated: false})
         res.render('Admin/admin-panel', {
             title: 'Панель Адміністратора', evalCat: evalSystem,
-            userEvalSystem: partEvalSystem, notEvaledSystem:notEvalSystem
+            userEvalSystem: partEvalSystem, notEvaledSystem:notEvalSystem, authorEmail:author
         });
     } catch (error) {
         console.error('Error fetching categories:', error);
@@ -666,7 +666,9 @@ app.post("/apply-resource", async (req, res) => {
         res.redirect('/result')
     } catch (error) {
         console.error('Error during applying resource:', error);
-        return res.status(500).send('<script>alert("Необхідно обрати хоча б 2 критерія!"); window.history.back();</script>');
+        return res.status(500).send(
+            '<script>alert("Ви не обрали критерії!"); window.history.back();</script>'
+        );
     }
 });
 

@@ -80,7 +80,8 @@
             <h2>Вітаємо в панелі Адміністратора</h2>
             <p>Тут ви можете змінювати ваше наповнення</p>
             <ul style="display: flex; ">
-                <li style="margin-right: 10px"><a href="/admin/panel/bulkData" class="add btn btn-primary zoom-effect">Додати</a></li>
+                <li style="margin-right: 10px"><a href="/admin/panel/bulkData" class="add btn btn-primary zoom-effect">Додати</a>
+                </li>
                 <li><a href="/" class="home btn btn-primary zoom-effect">Повернутися на домашню сторінку</a></li>
             </ul>
         </div>
@@ -133,7 +134,7 @@
             </div>
             {# Таблиця  вже оцінених #}
             <div class="container">
-                <h2>Категорії які були оцінені вами</h2>
+                <h2>Категорії, які були оцінені вами</h2>
                 <table class="table">
                     <thead>
                     <tr>
@@ -141,7 +142,7 @@
                         {% for category in userEvalSystem %}
                             <th>
                                 <a href="/edit-category/{{ category._id }}">
-                                    <button class="btn btn-sm btn-outline-secondary">Змінити</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Оцінити</button>
                                 </a>
                                 <a href="/delete-category/{{ category._id }}">
                                     <button class="btn btn-sm btn-outline-secondary">Видалити</button>
@@ -163,22 +164,24 @@
                             <td>{{ category.type }}</td>
                         {% endfor %}
                     </tr>
-                    {% for param in userEvalSystem[0].params %}
-                        <tr>
-                            <th>{{ param.title }}</th>
-                            {% for category in userEvalSystem %}
-                                {% for categoryParam in category.params %}
-                                    {% if categoryParam.title == param.title %}
-                                        <td>{{ categoryParam.rating }}</td>
-                                    {% endif %}
+                    {% for category in userEvalSystem %}
+                        {% for params in category.params %}
+                            <tr>
+                            <th>{{ params.title }}</th>
+                            {% for user in category.userMarks %}
+                                {% for marks in user.marks %}
+                                        <th>{{ marks.title }}</th>
                                 {% endfor %}
                             {% endfor %}
-                        </tr>
+                            </tr>
+                        {% endfor %}
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
-{#            Таблиця не оцінених#}
+
+
+            {#            Таблиця не оцінених #}
             <div class="container">
                 <h2>Не оцінені категорії</h2>
                 <table class="table">
@@ -188,7 +191,7 @@
                         {% for category in notEvaledSystem %}
                             <th>
                                 <a href="/edit-category/{{ category._id }}">
-                                    <button class="btn btn-sm btn-outline-secondary">Змінити</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Оцінити</button>
                                 </a>
                                 <a href="/delete-category/{{ category._id }}">
                                     <button class="btn btn-sm btn-outline-secondary">Видалити</button>
