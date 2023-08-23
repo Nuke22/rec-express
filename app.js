@@ -484,6 +484,28 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
                 }
         });
 
+        // add average for params
+
+        // find all and save it in array
+        // update values one by one
+        const oneSystem = await Category.findById(categoryId)
+        let averageArray = []
+        for (let j = 0; j < 10; i++){
+            let oneParamForAllUsers = []
+            for (let i = 0; i < oneSystem.userMarks.length; i++){
+                let result = oneSystem.userMarks.i.marks.j
+                oneParamForAllUsers.push(result)
+            }
+
+            let sum = oneParamForAllUsers.reduce(function(a, b){
+                return a + b;
+            });
+            averageArray.push(oneParamForAllUsers)
+
+            // await Category.findByIdAndUpdate(categoryId, {
+            //     params: j.rating: oneParamForAllUsers
+            // })
+        }
 
         return res.send('<script>alert("Категорія успішно оновлена"); window.location.href = "/admin/panel";</script>');
     } catch (error) {
