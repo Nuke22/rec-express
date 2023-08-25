@@ -226,7 +226,7 @@ app.get('/admin/panel', authenticateUser, async (req, res) => {
         const author = req.session.user.email
         const evalSystem = await Category.find({evaluated: true});
         const partEvalSystem = await Category.find({evaluatedBy: author})
-        const notEvalSystem = await Category.find({evaluated: false})
+        const notEvalSystem = await Category.find({evaluatedBy: {$not: {$eq: author}}})
         res.render('Admin/admin-panel', {
             title: 'Панель Адміністратора', evalCat: evalSystem,
             userEvalSystem: partEvalSystem, notEvaledSystem:notEvalSystem, authorEmail:author
