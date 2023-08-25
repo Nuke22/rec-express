@@ -432,11 +432,15 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
 
         // Оновлення назви та типу категорії
         await Category.findByIdAndUpdate(categoryId, {
+            $pull: {userMarks: {author: author}}
+        })
+
+        await Category.findByIdAndUpdate(categoryId, {
             title: title,
             type: type,
             evaluated: true,
+            $addToSet: {evaluatedBy: author},
             $push: {
-                evaluatedBy: author,
                 userMarks: {
                     author: author,
                     marks: [
@@ -489,22 +493,23 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
         // find all and save it in array
         // update values one by one
         const oneSystem = await Category.findById(categoryId)
-        let averageArray = []
-        for (let j = 0; j < 10; i++){
+        for (let j = 0; j < 10; j++){
             let oneParamForAllUsers = []
             for (let i = 0; i < oneSystem.userMarks.length; i++){
-                let result = oneSystem.userMarks.i.marks.j
+                let result = oneSystem.userMarks[i].marks[j].rating
+                result = parseInt(result)
                 oneParamForAllUsers.push(result)
             }
 
-            let sum = oneParamForAllUsers.reduce(function(a, b){
-                return a + b;
-            });
-            averageArray.push(oneParamForAllUsers)
+            let sum = 0
+            for (let n = 0; n < oneParamForAllUsers.length; n++){
+                sum += oneParamForAllUsers[n]
+            }
+            let average = sum/oneParamForAllUsers.length
 
-            // await Category.findByIdAndUpdate(categoryId, {
-            //     params: j.rating: oneParamForAllUsers
-            // })
+            await Category.updateOne(
+                {_id: categoryId},
+                {$set: {[`params.${j}.rating`]: average}})
         }
 
         return res.send('<script>alert("Категорія успішно оновлена"); window.location.href = "/admin/panel";</script>');
