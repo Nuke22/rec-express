@@ -1,10 +1,8 @@
 const createError = require('http-errors');
 const express = require('express');
-const router = express.Router();
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongodb = require("mongodb");
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -36,7 +34,6 @@ app.use(session({
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// TODO БАЗА ДАННИХ
 //Підключення до бази даних MongoDB
 mongoose.connect('mongodb://localhost:27017/express', {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {
@@ -71,7 +68,6 @@ const TypeOfResource = mongoose.model("TypeOfResource", {
 }, 'TypeOfResource')
 
 
-//TODO МiddleWare
 //Middleware для обробки JSON даних
 app.use(bodyParser.json());
 // Мідлвар для перевірки авторизації користувача та ролі перед доступом до захищених маршрутів
@@ -94,7 +90,6 @@ const authenticateUser = (req, res, next) => {
 };
 
 
-// TODO Сторінка BulkData-post
 // functionality of the page - you add some coma separated values in the text field. Then we find if any of the
 //      input matches with an existing name in the DB (evaluated or not).
 //      If yes - dont add a new doc in the DB.
@@ -141,6 +136,9 @@ app.post("/bulk-handler", async (req, res) => {
             let result = bulkDataArray[i].trim()
             newNames.push(result)
         }
+
+        //remove empty elements from the array
+        newNames = newNames.filter(element => element !== "")
 
         // separate new input from the existing one
         let reportAsExisting = []
@@ -220,7 +218,7 @@ app.post("/bulk-handler", async (req, res) => {
         res.status(500).send('Помилка. О ні, тільки не помилка. Що ж тепер робити... Та нічого не роби, життя матриця, всі помруть');
     }
 })
-// TODO Сторінка Адмін Панелі
+
 app.get('/admin/panel', authenticateUser, async (req, res) => {
     try {
         const author = req.session.user.email
@@ -237,24 +235,24 @@ app.get('/admin/panel', authenticateUser, async (req, res) => {
     }
 });
 
-//TODO Сторінка Домашня
+
 app.get('/', async (req, res, next) => {
     const categories = await TypeOfResource.find();
     console.log(categories)
     res.render('index', {title: 'Домашня сторінка', user: req.session.user, categories: categories});
 });
 
-//TODO Сторінка Реєстрації
+
 app.get('/register', function (req, res, next) {
     res.render('Auth/register', {title: 'Реєстрація'});
 });
 
-//TODO Сторінка Авторизації
+
 app.get('/login', function (req, res, next) {
     res.render('Auth/login', {title: 'Реєстрація'});
 });
 
-//TODO Сторінка Результатів
+
 app.get('/result', function (req, res, next) {
     let LOST_sorted1 = req.session.LOST_sorted
 
@@ -301,14 +299,8 @@ app.get('/result', function (req, res, next) {
         name_of_each_vertex: req.session.name_of_each_vertex
     });
 });
-// TODO Сторінка Додавання категорій
-// app.get('/admin/panel/add', authenticateUser, async (req, res) => {
-//     const listOfSystems = await TypeOfResource.find({})
-//     console.log(listOfSystems)
-//     res.render('Admin/add-category', {title: 'Додати категорію', categories: listOfSystems});
-// });
 
-// TODO  Обробник форми реєстрації
+
 // Роутер для обробки реєстрації
 app.post('/register/user', async (req, res) => {
     try {
@@ -334,7 +326,7 @@ app.post('/register/user', async (req, res) => {
     }
 });
 
-// TODO Обробник форми авторизації
+
 // Роутер для обробки авторизації
 app.post('/login/user', async (req, res) => {
     try {
@@ -364,7 +356,7 @@ app.post('/login/user', async (req, res) => {
     }
 });
 
-//TODO Обробник розлогування
+
 //Роутер для виходу з облікового запису
 app.get('/logout', (req, res) => {
     // Видаляємо інформацію про користувача з сесії
@@ -378,7 +370,7 @@ app.get('/logout', (req, res) => {
 });
 
 
-// TODO Обробник видалення категорії
+
 app.get('/delete-category/:id', authenticateUser, async (req, res) => {
     try {
         const categoryId = req.params.id;
@@ -393,7 +385,7 @@ app.get('/delete-category/:id', authenticateUser, async (req, res) => {
     }
 });
 
-// TODO Обробник редагування категорії (показ форми та збереження змін)
+
 app.get('/edit-category/:id', authenticateUser, async (req, res) => {
     try {
         const categoryId = req.params.id;
@@ -410,7 +402,7 @@ app.get('/edit-category/:id', authenticateUser, async (req, res) => {
     }
 });
 
-// TODO Обробник збереження змін у категорії
+
 app.post('/edit-category/:id', authenticateUser, async (req, res) => {
     try {
         const categoryId = req.params.id;
@@ -488,10 +480,7 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
                 }
         });
 
-        // add average for params
-
-        // find all and save it in array
-        // update values one by one
+        // this code finds avarage and applies it for parameters of the system 1 by 1
         const oneSystem = await Category.findById(categoryId)
         for (let j = 0; j < 10; j++){
             let oneParamForAllUsers = []
@@ -518,9 +507,6 @@ app.post('/edit-category/:id', authenticateUser, async (req, res) => {
         return res.send('<script>alert("Виникла помилка під час оновлення категорії"); window.history.back();</script>');
     }
 });
-
-
-// TODO Обробник Типу категорій навчальних ресурсів
 
 app.post("/apply-resource", async (req, res) => {
     try {
@@ -549,8 +535,6 @@ app.post("/apply-resource", async (req, res) => {
         }
         //working names
         // LOST = list of Systems That Fits the criteria
-
-        // computations
 
         // STEP1 - COMPUTING THE PULL OF MATRIX
         // this is 3-dimensional matrix in format: matrix3d_forAGn[pick AGn from 0 to 9][pick a row for selected matrix][pick index]
@@ -716,4 +700,3 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 module.exports = app;
-

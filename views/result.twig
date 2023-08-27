@@ -90,10 +90,15 @@
                         <div class="polygon" style="{{ system.polygon }}"></div>
                         {% for rotation in system.tiltArray %}
                             {% set color_position = chosenCheck[loop.index0] %}
+                            {% set value = system.Pn_param[loop.index0] %}
                             <div class="stick" style="transform: rotate({{ rotation }}deg);
                                     background-color: {{ color_pallet[color_position] }};
                                     border: 0.15rem solid lightgray;
                                     border-radius: 50% 10% 10% 50%">
+                                <div class="number"
+                                    style="margin-left: 12.4rem;
+                                    display: inline-block;
+                                    transform: rotate(-{{ rotation }}deg)">{{ value|number_format(2)}}</div>
                             </div>
                         {% endfor %}
                     </div>
