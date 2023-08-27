@@ -9,9 +9,10 @@
             border-radius: 50%;
             position: relative;
             z-index: -100;
-            margin-left: 350px;
-            margin-bottom: 100px;
-            margin-top: 100px;
+            margin-left: 10rem;
+            margin-bottom: 3rem;
+            margin-top: 3rem;
+
         }
         .stick {
             width: 12rem;
@@ -84,7 +85,7 @@
     <table class="tab">
         {% for system in systems %}
             <tr>
-                <td><h2 class="name">{{ system.title }}:</h2></td>
+                <td><h2 class="name">{{ loop.index }}. {{ system.title }}:</h2></td>
                 <td>
                     <div class="canvas">
                         <div class="polygon" style="{{ system.polygon }}"></div>
