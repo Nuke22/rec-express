@@ -1,0 +1,71 @@
+{% extends '../layout.twig' %}
+{% block body %}
+    <div class="container">
+        <div class="form-container">
+            <h1>Нова категорія</h1>
+
+            {% if message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            <form action="/add" method="POST">
+                <div class="form-group">
+                    <label for="title">Назва</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="type">Тип</label>
+                    <select class="form-select" name="type" id="type" required>
+                        {% for category in categories %}
+                            <option value="{{ category.name }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rating1">Оцінка інтерактивності</label>
+                    <input type="number" class="form-control" id="rating1" name="rating1" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating2">Оцінка мультимедійності</label>
+                    <input type="number" class="form-control" id="rating2" name="rating2" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating3">Оцінка можливості модифікації</label>
+                    <input type="number" class="form-control" id="rating3" name="rating3" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating4">Оцінка кросплатформенності</label>
+                    <input type="number" class="form-control" id="rating4" name="rating4" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating5">Оцінка вільнопоширюваності</label>
+                    <input type="number" class="form-control" id="rating5" name="rating5" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating6">Оцінка архітектури</label>
+                    <input type="number" class="form-control" id="rating6" name="rating6" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating7">Оцінка функціональності</label>
+                    <input type="number" class="form-control" id="rating7" name="rating7" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating8">Оцінка чисельності тем для опрацювання</label>
+                    <input type="number" class="form-control" id="rating8" name="rating8" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating9">Оцінка відповідності предметній області</label>
+                    <input type="number" class="form-control" id="rating9" name="rating9" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating10">Оцінка відповідності навчального змісту освітнім стандартам</label>
+                    <input type="number" class="form-control" id="rating10" name="rating10" min="1" max="10" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary reg_btn">Додати категорію</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

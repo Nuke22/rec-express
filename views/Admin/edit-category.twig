@@ -1,0 +1,40 @@
+{% extends '../layout.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="form-container">
+            <h1>Оцінити категорію</h1>
+
+            {% if message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            <form action="/edit-category/{{ category._id }}" method="post">
+                <div class="form-group">
+                    <label for="title">Заголовок:</label>
+                    <input type="text" id="title" class="form-control" name="title" value="{{ category.title }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="type">Тип</label>
+                    <select name="type" id="type" class="form-select" required>
+                        {% for selector in selectors %}
+                            <option value="{{ selector.name }}">{{ selector.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+                {% for param in category.params %}
+                    <div class="form-group">
+                        <label for="filter{{ loop.index }}{{ param.title }}">{{ param.title }}</label>
+                        <input type="number" class="form-control" id="filter{{ loop.index }}" name="filter{{ loop.index }}"
+                               min="1" max="10"
+                               required>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary reg_btn">Оновити</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
